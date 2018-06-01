@@ -14,6 +14,8 @@ class CommentGetThreadProcessor extends AppGetListProcessor
     public $tpl = '@FILE chunks/comments/comments.tpl';
     /** @var comThread $thread */
     protected $thread;
+    /** @var int $properties */
+    protected $voting;
 
 
     /**
@@ -21,11 +23,20 @@ class CommentGetThreadProcessor extends AppGetListProcessor
      */
     public function initialize()
     {
+        $initialize = parent::initialize();
         if (!$this->thread = $this->modx->getObject('comThread', ['topic' => (int)$this->getProperty('topic')])) {
-            return 'no_topic';
+            return $this->modx->lexicon('access_denied');
+        }
+        $c = $this->modx->newQuery('comTopic', ['id' => $this->thread->topic]);
+        $c->innerJoin('comSection', 'Section');
+        $c->select('Section.alias');
+        if ($c->prepare() && $c->stmt->execute()) {
+            $this->voting = $this->App->getProperties($c->stmt->fetchColumn(), 'comment')['voting'];
+        } else {
+            return $this->modx->lexicon('access_denied');
         }
 
-        return parent::initialize();
+        return $initialize;
     }
 
 
@@ -56,6 +67,8 @@ class CommentGetThreadProcessor extends AppGetListProcessor
         if ($this->modx->user->id) {
             $c->leftJoin('comStar', 'Star', 'Star.id = comComment.id AND Star.class = "comComment" AND Star.createdby = ' . $this->modx->user->id);
             $c->select('Star.id as star');
+            $c->leftJoin('comVote', 'Vote', 'Vote.id = comComment.id AND Vote.class = "comComment" AND Vote.createdby = ' . $this->modx->user->id);
+            $c->select('Vote.value as vote');
         }
         $c->select($this->modx->getSelectColumns($this->classKey, $this->classKey));
         $c->select('User.username');
@@ -77,11 +90,11 @@ class CommentGetThreadProcessor extends AppGetListProcessor
         $count = count($array);
         $view = $this->modx->getObject('comView', [
             'topic_id' => $this->thread->topic,
-            'user_id' => $this->modx->user->id
+            'user_id' => $this->modx->user->id,
         ]);
         $array = [
             'comments' => $this->buildTree($array),
-            'seen' => $view ? $view->get('timestamp'): false,
+            'seen' => $view ? $view->get('timestamp') : false,
             'thread' => $this->thread->toArray(),
         ];
 
@@ -113,6 +126,20 @@ class CommentGetThreadProcessor extends AppGetListProcessor
         }
 
         return $tree;
+    }
+
+
+    /**
+     * @param array $array
+     *
+     * @return array
+     */
+    public function prepareArray(array $array)
+    {
+        $array['can_vote'] = $this->modx->user->isAuthenticated($this->modx->context->key) &&
+            (strtotime($array['createdon']) + $this->voting) > time();
+
+        return $array;
     }
 
 }

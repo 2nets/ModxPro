@@ -121,7 +121,7 @@ class AppGetListProcessor extends modObjectGetListProcessor
         $data = [];
         $start = intval($this->getProperty('start'));
         $limit = intval($this->getProperty('limit'));
-        if ($limit > $this->_max_limit) {
+        if ($this->_max_limit && $limit > $this->_max_limit) {
             $limit = $this->_max_limit;
         }
 

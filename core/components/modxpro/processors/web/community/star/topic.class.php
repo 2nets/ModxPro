@@ -33,7 +33,7 @@ class CommunityStarTopicProcessor extends modProcessor
             $star->fromArray($key, '', true, true);
             $star->set('createdon', date('Y-m-d H:i:s'));
             /** @var comTopic $object */
-            if ($object = $this->modx->getObject('Topic', $key['id'])) {
+            if ($object = $this->modx->getObject('comTopic', $key['id'])) {
                 $star->set('owner', $object->createdby);
             }
             $star->save();

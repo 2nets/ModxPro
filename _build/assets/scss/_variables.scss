@@ -21,6 +21,11 @@ $gray-dark: #293034 !default;
 $gray-300: #dee2e6 !default;
 $link-color: #369 !default;
 
+$tooltip-max-width: 300px !default;
+$tooltip-color: #000 !default;
+$tooltip-bg: #fff !default;
+$tooltip-opacity: 1 !default;
+
 $font-family-sans-serif: sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
 $font-family-monospace: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
 $font-family-base: $font-family-sans-serif !default;

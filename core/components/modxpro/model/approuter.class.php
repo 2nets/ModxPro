@@ -9,6 +9,8 @@ class AppRouter
     public $pdoTools;
     /** @var FastRoute\Dispatcher $dispatcher */
     public $dispatcher;
+    /** @var App */
+    public $App;
 
 
     /**
@@ -19,6 +21,7 @@ class AppRouter
     {
         $this->modx = $modx;
         $this->pdoTools = $modx->getService('pdoFetch');
+        $this->App = $modx->getService('App');
         $this->initialize();
     }
 
@@ -114,8 +117,6 @@ class AppRouter
      */
     public function mainPage($mode)
     {
-        /** @var App $App */
-        $App = $this->modx->getService('App');
         $mode = array_shift($mode);
         $data = [
             'mode' => $mode,
@@ -147,7 +148,7 @@ class AppRouter
                 ]);
                 break;
         }
-        $data['res'] = $App->runProcessor('community/topic/getlist', $params);
+        $data['res'] = $this->App->runProcessor('community/topic/getlist', $params);
 
         $this->modx->resource = $this->modx->getObject('modResource', $this->modx->getOption('site_start'));
         $this->modx->resource->set('content', $this->pdoTools->getChunk('@INLINE ' . $this->modx->resource->content, $data));
@@ -436,6 +437,9 @@ class AppRouter
                     'id' => $topic['id'],
                     'createdby' => $this->modx->user->id,
                 ]);
+                $properties = $this->App->getProperties($topic['section_uri']);
+                $topic['can_vote'] = $this->modx->user->isAuthenticated($this->modx->context->key) &&
+                    (strtotime($topic['createdon']) + $properties['voting']) > time();
             } else {
                 $topic['star'] = false;
             }

@@ -72,6 +72,8 @@ class CommentGetListProcessor extends AppGetListProcessor
         if ($this->modx->user->id) {
             $c->leftJoin('comStar', 'Star', 'Star.id = comComment.id AND Star.class = "comComment" AND Star.createdby = ' . $this->modx->user->id);
             $c->select('Star.id as star');
+            $c->leftJoin('comVote', 'Vote', 'Vote.id = comComment.id AND Vote.class = "comComment" AND Vote.createdby = ' . $this->modx->user->id);
+            $c->select('Vote.value as vote');
         }
         $c->select($this->modx->getSelectColumns($this->classKey, $this->classKey));
         $c->select('Thread.topic, Thread.comments');
@@ -80,6 +82,21 @@ class CommentGetListProcessor extends AppGetListProcessor
         $c->select('Topic.pagetitle as topic_title, Section.uri, Section.pagetitle as section_title');
 
         return $c;
+    }
+
+
+    /**
+     * @param array $array
+     *
+     * @return array
+     */
+    public function prepareArray(array $array)
+    {
+        $properties = $this->App->getProperties($array['uri']);
+        $array['can_vote'] = $this->modx->user->isAuthenticated($this->modx->context->key) &&
+            (strtotime($array['createdon']) + $properties['voting']) > time();
+
+        return $array;
     }
 
 }

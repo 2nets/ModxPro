@@ -37,3 +37,42 @@ img {
     padding-left: 20px;
   }
 }
+
+.tooltip {
+  &-inner {
+    box-shadow: 0 0 7px rgba(0, 0, 0, .32);
+  }
+  .arrow {
+    &:after {
+      content: '';
+      border-color: transparent;
+      position: absolute;
+      border-style: solid;
+    }
+  }
+  &.bs-tooltip-top {
+    .arrow {
+      &:before {
+        border-width: .6rem .4rem 0;
+        border-top-color: rgba(0, 0, 0, .1);
+      }
+      &:after {
+        border-width: .4rem .4rem 0;
+        border-top-color: $tooltip-bg;
+      }
+    }
+  }
+  &.bs-tooltip-bottom {
+    .arrow {
+      &:before {
+        bottom: 0;
+        border-width: 0 .4rem .6rem;
+        border-bottom-color: rgba(0, 0, 0, .1);
+      }
+      &:after {
+        border-width: 0 .4rem .4rem;
+        border-bottom-color: $tooltip-bg;
+      }
+    }
+  }
+}

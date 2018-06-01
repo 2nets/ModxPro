@@ -1,8 +1,8 @@
 <?php
-$xpdo_meta_map['comStar']= array (
+$xpdo_meta_map['comVote']= array (
   'package' => 'modxpro',
   'version' => '1.1',
-  'table' => 'app_community_stars',
+  'table' => 'app_community_votes',
   'extends' => 'xPDOObject',
   'tableMeta' => 
   array (
@@ -13,8 +13,10 @@ $xpdo_meta_map['comStar']= array (
     'id' => NULL,
     'class' => NULL,
     'owner' => NULL,
+    'value' => NULL,
     'createdon' => NULL,
     'createdby' => NULL,
+    'ip' => '0.0.0.0',
   ),
   'fieldMeta' => 
   array (
@@ -42,6 +44,14 @@ $xpdo_meta_map['comStar']= array (
       'phptype' => 'integer',
       'attributes' => 'unsigned',
       'null' => false,
+      'index' => 'index',
+    ),
+    'value' => 
+    array (
+      'dbtype' => 'tinyint',
+      'precision' => '1',
+      'phptype' => 'integer',
+      'null' => false,
     ),
     'createdon' => 
     array (
@@ -58,6 +68,14 @@ $xpdo_meta_map['comStar']= array (
       'attributes' => 'unsigned',
       'null' => false,
       'index' => 'pk',
+    ),
+    'ip' => 
+    array (
+      'dbtype' => 'varchar',
+      'precision' => '16',
+      'phptype' => 'string',
+      'null' => true,
+      'default' => '0.0.0.0',
     ),
   ),
   'indexes' => 

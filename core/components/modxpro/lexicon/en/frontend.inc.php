@@ -30,3 +30,5 @@ $_lang['app_slack_ok'] = 'Check your mailbox!';
 $_lang['app_slack_err'] = 'Unknown error';
 $_lang['app_slack_err_email'] = 'You forgot to specify email';
 $_lang['app_slack_err_invited'] = 'The invitation was already sent';
+
+$_lang['vote_err_ended'] = 'The time for voting ended';

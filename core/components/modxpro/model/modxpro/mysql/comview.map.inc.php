@@ -68,6 +68,22 @@ $xpdo_meta_map['comView']= array (
   ),
   'aggregates' => 
   array (
+    'User' => 
+    array (
+      'class' => 'modUser',
+      'local' => 'user_id',
+      'foreign' => 'id',
+      'cardinality' => 'one',
+      'owner' => 'foreign',
+    ),
+    'UserProfile' => 
+    array (
+      'class' => 'modUserProfile',
+      'local' => 'user_id',
+      'foreign' => 'internalKey',
+      'cardinality' => 'one',
+      'owner' => 'foreign',
+    ),
     'Topic' => 
     array (
       'class' => 'comTopic',

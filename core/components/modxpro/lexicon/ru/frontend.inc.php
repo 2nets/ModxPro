@@ -30,3 +30,5 @@ $_lang['app_slack_ok'] = 'Проверьте свой почтовый ящик!
 $_lang['app_slack_err'] = 'Неизвестная ошибка';
 $_lang['app_slack_err_email'] = 'Вы забыли указать email';
 $_lang['app_slack_err_invited'] = 'Вам уже было отправлено приглашение';
+
+$_lang['vote_err_ended'] = 'Время для голосования закончилось';

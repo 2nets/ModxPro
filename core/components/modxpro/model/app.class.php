@@ -7,8 +7,101 @@ class App
     /** @var pdoFetch $pdoTools */
     public $pdoTools;
     public $config = [];
+    public $properties = [
+        'default' => [
+            'topic' => [
+                'create' => 1, // rating for creating of topic in this section
+                'vote' => 1, // rating you will get for each vote
+                'star' => .5, // rating you will get for each star
+                'required' => -100, // this rating you need to create topic in this section
+                'voting' => 7 * 86400, // time for voting
+            ],
+            'comment' => [
+                'create' => 0,
+                'vote' => .2,
+                'star' => .2,
+                'required' => -100,
+                'voting' => 7 * 86400,
+            ],
+        ],
+        'help' => [
+            'topic' => [
+                'create' => 0,
+                'vote' => .2,
+            ],
+        ],
+        'news' => [
+            'topic' => [
+                'create' => 10,
+                'vote' => 1,
+                'required' => 30,
+            ],
+        ],
+        'hosting' => [
+            'topic' => [
+                'create' => 10,
+                'vote' => 1,
+                'required' => 30,
+            ],
+        ],
+        'solutions' => [
+            'topic' => [
+                'create' => 15,
+                'vote' => 1,
+                'required' => 10,
+            ],
+        ],
+        'work' => [
+            'topic' => [
+                'create' => 0,
+                'vote' => 0,
+            ],
+        ],
+        'crowdfunding' => [
+            'topic' => [
+                'create' => 10,
+            ],
+        ],
+        'howto' => [
+            'topic' => [
+                'create' => 20,
+                'required' => 10,
+            ],
+        ],
+        'store' => [
+            'topic' => [
+                'create' => 10,
+            ],
+        ],
+        'components' => [
+            'topic' => [
+                'create' => 10,
+            ],
+        ],
+        'security' => [
+            'topic' => [
+                'create' => 10,
+                'vote' => 2,
+                'required' => 30,
+            ],
+        ],
+        'development' => [
+            'topic' => [
+                'create' => 10,
+                'vote' => 2,
+                'required' => 30,
+            ],
+        ],
+        'sites' => [
+            'topic' => [
+                'create' => 15,
+                'vote' => 2,
+                'required' => 0,
+            ],
+        ],
+    ];
 
-    const assets_version = '1.16-dev';
+    const assets_version = '1.18-dev';
     const avatars_path = 'images/avatars/';
     const gravatars_cache = 86400;
 
@@ -290,7 +383,7 @@ class App
             }
         }
         if (empty($tpl)) {
-            $tpl = '<div class="avatar"><a href="{link}"><img src="{image1}" width="{width}" srcset="{image2} 2x" alt="{alt}"></a></div>';
+            $tpl = '<div class="avatar"><a href="{link}"><img src="{image1}" width="{width}" height="{height}" srcset="{image2} 2x" alt="{alt}"></a></div>';
         }
         $id = !empty($data['createdby'])
             ? $data['createdby']
@@ -306,6 +399,7 @@ class App
             '{image1}' => $image[$size],
             '{image2}' => $image[$size * 2],
             '{width}' => $size,
+            '{height}' => $size,
             '{alt}' => @$data['fullname'] ?: '',
         ];
         $avatar = str_replace(array_keys($data), array_values($data), $tpl);
@@ -442,6 +536,26 @@ class App
         $this->modx->log(modX::LOG_LEVEL_ERROR, 'Could not generate thumbnail for "' . $src . '". ' . print_r($phpThumb->debugmessages, 1));
 
         return false;
+    }
+
+
+    /**
+     * @param $section
+     * @param string $type
+     *
+     * @return mixed
+     */
+    public function getProperties($section, $type = 'topic')
+    {
+        $properties = isset($this->properties[$section])
+            ? $this->properties[$section]
+            : $this->properties['default'];
+
+        $properties[$type] = !empty($properties[$type])
+            ? array_merge($this->properties['default'][$type], $properties[$type])
+            : $this->properties['default'][$type];
+
+        return $properties[$type];
     }
 
 

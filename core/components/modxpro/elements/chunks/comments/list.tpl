@@ -36,15 +36,33 @@
                     </div>
                     <div class="ml-md-5">
                         <div class="rating">
-                            <i class="far fa-arrow-up mr-2"></i>
-                            {if $item.rating > 0}
-                                <span class="text-success">+{$item.rating}</span>
-                            {elseif $item.rating < 0}
-                                <span class="text-danger">{$item.rating}</span>
+                            {if $item.can_vote}
+                                <a href="#" class="vote up{if $item.vote && $item.vote == 1} active{/if}" data-vote="up">
+                                    <i class="far fa-arrow-up mr-2"></i>
+                                </a>
                             {else}
-                                <span>{$item.rating}</span>
+                                <i class="far fa-arrow-up mr-2 disabled"></i>
                             {/if}
-                            <i class="far fa-arrow-down ml-2"></i>
+                            {if $_modx->isAuthenticated()}
+                                <a href="#" class="get_votes">
+                            {/if}
+                            {if $item.rating > 0}
+                                <span class="placeholder positive">+{$item.rating}</span>
+                            {elseif $item.rating < 0}
+                                <span class="placeholder negative">{$item.rating}</span>
+                            {else}
+                                <span class="placeholder">{$item.rating}</span>
+                            {/if}
+                            {if $_modx->isAuthenticated()}
+                                </a>
+                            {/if}
+                            {if $item.can_vote}
+                                <a href="#" class="vote down{if $item.vote && $item.vote == -1} active{/if}" data-vote="down">
+                                    <i class="far fa-arrow-down ml-2"></i>
+                                </a>
+                            {else}
+                                <i class="far fa-arrow-down ml-2 disabled"></i>
+                            {/if}
                         </div>
                     </div>
                 </div>

@@ -82,6 +82,8 @@ class TopicGetListProcessor extends AppGetListProcessor
                 $c->select('Thread.id as thread');
                 $c->leftJoin('comStar', 'Star', 'Star.id = comTopic.id AND Star.class = "comTopic" AND Star.createdby = ' . $this->modx->user->id);
                 $c->select('Star.id as star');
+                $c->leftJoin('comVote', 'Vote', 'Vote.id = comTopic.id AND Vote.class = "comTopic" AND Vote.createdby = ' . $this->modx->user->id);
+                $c->select('Vote.value as vote');
             }
             $c->select('User.username');
             $c->select('UserProfile.photo, UserProfile.email, UserProfile.fullname, UserProfile.usename');
@@ -115,6 +117,10 @@ class TopicGetListProcessor extends AppGetListProcessor
         } else {
             $array['new'] = 0;
         }
+
+        $properties = $this->App->getProperties($array['section_uri']);
+        $array['can_vote'] = $this->modx->user->isAuthenticated($this->modx->context->key) &&
+            (strtotime($array['createdon']) + $properties['voting']) > time();
 
         return $array;
     }

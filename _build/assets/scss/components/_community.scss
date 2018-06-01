@@ -33,13 +33,11 @@
       font-weight: bold;
     }
   }
-  .rating {
-    span[class] { font-weight: bold; }
-  }
   .comments, .star {
     a { color: $gray-dark; }
   }
   .star {
+    a { text-decoration: none; }
     div::before {
       font-family: 'Font Awesome 5 Regular';
       content: '\f005';
@@ -84,9 +82,6 @@
   .topic-content {
     img { max-width: 100%; }
   }
-  .topic-meta {
-    zoom: .9;
-  }
 }
 
 .comments-list {
@@ -125,11 +120,11 @@
         }
         .date {font-size: 12px;}
       }
-      .rating {
-        span[class] { font-weight: bold; }
-      }
       .star {
-        a { color: $gray-dark; }
+        a {
+          color: $gray-dark;
+          text-decoration: none;
+        }
         div::before {
           font-family: 'Font Awesome 5 Regular';
           content: '\f005';
@@ -208,9 +203,6 @@
             line-height: 12px
           }
         }
-        .rating {
-          span[class] { font-weight: bold; }
-        }
       }
     }
   }
@@ -258,6 +250,51 @@ ul.comments-list {
     color: $gray-dark;
     &:hover {
       color: $link-color !important;
+    }
+  }
+}
+
+.topic-meta, .comment-row {
+  .rating {
+    a {
+      text-decoration: none;
+    }
+    .active {
+      cursor: default;
+      &.up { color: $success; }
+      &.down { color: $danger; }
+    }
+    .placeholder {
+      &.positive { color: $success; font-weight: bold; }
+      &.negative { color: $danger; font-weight: bold; }
+      color: $body-color;
+    }
+    .disabled { color: #aaa; }
+  }
+}
+
+.rating-tooltip {
+  .tooltip-inner {
+    max-height: 150px;
+    overflow: auto;
+    text-align: left;
+    font-size: 12px;
+    & > div {
+      display: flex;
+      align-items: center;
+      padding: 5px;
+      &:not(:last-child) {
+        border-bottom: 1px solid $gray-200;
+      }
+    }
+    a { text-decoration: none; }
+  }
+  .avatar {
+    img {
+      height: 25px;
+      width: 25px;
+      border-radius: 25px;
+      margin-right: 5px;
     }
   }
 }

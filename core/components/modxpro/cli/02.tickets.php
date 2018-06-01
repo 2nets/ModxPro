@@ -32,6 +32,7 @@ $topics = $threads = [];
 $modx->prepare("TRUNCATE {$modx->getTableName('comTopic')};")->execute();
 $modx->prepare("TRUNCATE {$modx->getTableName('comThread')};")->execute();
 $modx->prepare("TRUNCATE {$modx->getTableName('comComment')};")->execute();
+$modx->prepare("TRUNCATE {$modx->getTableName('comVote')};")->execute();
 $modx->prepare("TRUNCATE {$modx->getTableName('comStar')};")->execute();
 $modx->prepare("TRUNCATE {$modx->getTableName('comView')};")->execute();
 
@@ -105,6 +106,32 @@ if ($stmt = $pdo->prepare($c->toSQL())) {
         $item->save();
 
         $threads[$item->get('id')] = $item->get('context');
+    }
+}
+
+// Votes
+$c = $modx->newQuery('TicketVote');
+$c->select($modx->getSelectColumns('TicketVote', 'TicketVote'));
+$c->prepare();
+if ($stmt = $pdo->prepare($c->toSQL())) {
+    if (!$stmt->execute()) {
+        print_r($stmt->errorInfo());
+        exit;
+    }
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        if (!$row['value']) {
+            continue;
+        }
+        if ($row['class'] == 'Ticket') {
+            $row['class'] = 'comTopic';
+        } elseif ($row['class'] == 'TicketComment') {
+            $row['class'] = 'comComment';
+        }
+
+        /** @var comStar $item */
+        $item = $modx->newObject('comVote');
+        $item->fromArray($row, '', true, true);
+        $item->save();
     }
 }
 
