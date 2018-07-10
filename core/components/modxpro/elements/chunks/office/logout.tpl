@@ -15,39 +15,45 @@
             <div class="wrapper">
                 <div class="email">{$email}</div>
                 <div>
-                    <a href="https://id.{'http_host' | config | preg_replace : '#^en\.#' : ''}" class="profile">
-                        {$.en ? 'Settings' : 'Настройки'}
-                    </a>
+                    {var $rating = $_modx->user | author : 'rating'}
+                    {$.en ? 'Rating' : 'Рейтинг'}:
+                    {if $rating > 0}
+                        <span class="text-success font-weight-bold">{$rating | number : 1}</span>
+                    {elseif $rating < 0}
+                        <span class="text-danger font-weight-bold">{$rating | number : 1}</span>
+                    {else}
+                        {$rating | number : 1}
+                    {/if}
                 </div>
             </div>
         </div>
         <div class="links">
-            <a href="/topic">{$.en ? 'Make a topic' : 'Написать заметку'}</a>
-            <a href="{$profile}">{$.en ? 'My profile' : 'Мой профиль'}</a>
-            <div class="dropdown-divider"></div>
-            <a href="?action=auth/logout" class="logout" >{$.en ? 'Log out' : 'Выйти'}</a>
+            <a href="/topic"><i class="far fa-pencil"></i> {$.en ? 'Make a topic' : 'Написать заметку'}</a>
+            <a href="{$profile}"><i class="far fa-user"></i> {$.en ? 'My profile' : 'Мой профиль'}</a>
+            <a href="https://id.{'http_host' | config | preg_replace : '#^en\.#' : ''}">
+                <i class="far fa-cog"></i> {$.en ? 'My settings' : 'Мои настройки'}
+            </a>
+            {if !$authorized}
+                <div class="dropdown-divider"></div>
+            {/if}
+            <a href="?action=auth/logout"><i class="far fa-sign-out fa-flip-horizontal"></i> {$.en ? 'Log out' : 'Выйти'}</a>
         </div>
-        {*
-        <div class="authorized">
-            {if $authorized?}
+        {if $authorized?}
+            <div class="authorized">
+                <div class="dropdown-divider"></div>
                 {foreach $authorized as $id => $user}
-                    <div class="item">
-                        <a href="?action=auth/change&user_id={$id}" class="item">
-                            <img src="//gravatar.com/avatar/{$user.email | lower | md5}?s=60&d=mm" class="avatar">
+                    <div class="d-flex align-items-center item">
+                        <a href="?action=auth/change&user_id={$id}" class="d-flex avatar align-items-center">
+                            {$user | avatar : 64 : '<img src="{image1}" srcset="{image2} 2x" width="{width}" alt="{alt}">'}
                             <div class="d-flex flex-column">
                                 <div class="name">{$user.fullname}</div>
-                                <div class="email">{$user.email}</div>
+                                <div class="email small">{$user.email}</div>
                             </div>
                         </a>
-                        <a href="?action=auth/logout&user_id={$id}" class="ml-auto"><i class="fa fa-sign-out"></i></a>
+                        <a href="?action=auth/logout&user_id={$id}" class="ml-auto far fa-sign-out"></a>
                     </div>
                 {/foreach}
-            {/if}
-            <a href="#auth/add" class="item">
-                <div class="avatar"><i class="fa fa-plus-circle"></i></div>
-                <div class="name">{$.en ? 'Add account' : 'Добавить аккаунт'}</div>
-            </a>
-        </div>
-        *}
+            </div>
+        {/if}
     </div>
 </div>

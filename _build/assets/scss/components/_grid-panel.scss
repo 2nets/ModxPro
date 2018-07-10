@@ -16,36 +16,30 @@
       */
     }
     th {
-      //font-size: 1.1em;
       text-align: left;
       border-top: none;
       border-bottom-color: $link-color;
       white-space: nowrap;
       &.sortable {
         cursor: pointer;
-        svg {
-          margin-left: 10px;
-        }
         &::after {
-          display: none;
-          content: "\f160";
+          font-family: 'Font Awesome 5 Pro';
+          margin-left: 5px;
           font-size: 12px;
+          content: '\f160';
+          opacity: 0;
         }
         &:hover {
-          &::after {
-            color: $link-color;
-          }
+          color: $link-color;
         }
       }
       &.asc::after {
-        font-family: 'Font Awesome 5 Regular';
         content: '\f161';
-        color: $link-color;
+        opacity: 1;
       }
       &.desc::after {
-        font-family: 'Font Awesome 5 Regular';
         content: '\f160';
-        color: $link-color;
+        opacity: 1;
       }
     }
     td.empty {
@@ -219,6 +213,7 @@
         .avatar {
           padding-right: 10px;
           img {
+            min-width: 48px;
             width: 48px;
             border-radius: 30px;
           }

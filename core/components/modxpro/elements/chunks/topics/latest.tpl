@@ -17,13 +17,13 @@
         </a>
         <div class="d-flex no-gutters align-items-center meta">
             {if $item.section_uri == 'work'}
-                <i class="far fa-eye"></i><span class="ml-1">{$item.views}</span>
+                <i class="far fa-eye ml-auto"></i><span class="ml-1">{$item.views}</span>
             {else}
                 <a href="/{$item.section_uri}">
                     <i class="far fa-folder-open mr-1"></i>
                     {$item.section_title}
                 </a>
-                <i class="far fa-eye ml-3"></i><span class="ml-1">{$item.views}</span>
+                <i class="far fa-eye ml-auto"></i><span class="ml-1">{$item.views}</span>
                 <a href="/{$item.uri}#comments">
                     <i class="far fa-comment ml-3"></i><span class="ml-1">{$item.comments}</span>
                 </a>

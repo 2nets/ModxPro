@@ -18,7 +18,7 @@
         table { border-spacing: 0; width: 100%; }
         table td { margin: 0; }
         body > table { width: 600px; margin: auto; }
-        a { color: #1abc9c; outline: none; text-decoration: none; }
+        a { color: #369; outline: none; text-decoration: none; }
         p { font-size: 16px; line-height: 22px; }
         h1 { font-size: 22px; margin: 0 0 20px 0; font-weight: normal; }
         h1.no-margin { margin: 0; }
@@ -64,7 +64,7 @@
     <tr>
         <td class="main-logo">
             <a href="{$site_url}" target="_blank">
-                <img src="{$site_url}assets/components/modxpro/img/newsletters/logo.png" alt="{'site_name' | config}"/>
+                <img src="{$site_url}assets/components/modxpro/img/logo2@2x.png" alt="{'site_name' | config}"/>
             </a>
         </td>
     </tr>
@@ -79,7 +79,6 @@
     </tr>
     <tr>
         <td>
-            <!--
             <table class="footer">
                 <tr>
                     <td class="left">
@@ -104,7 +103,6 @@
                     </td>
                 </tr>
             </table>
-            -->
         </td>
     </tr>
     </tbody>

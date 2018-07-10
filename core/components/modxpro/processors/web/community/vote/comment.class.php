@@ -34,13 +34,12 @@ class CommunityVoteCommentProcessor extends modObjectProcessor
             ? -1
             : 1;
         /** @var comComment $object */
-        $object = $this->modx->getObject('comComment', $key['id']);
-        if (!$object) {
+        $object = $this->modx->getObject('comComment', ['id' => $key['id'], 'deleted' => false]);
+        if (!$object || $object->createdby == $this->modx->user->id) {
             return $this->failure($this->modx->lexicon('access_denied'));
         }
-        $c = $this->modx->newQuery('comThread', ['id' => $object->thread]);
-        $c->innerJoin('comTopic', 'Topic');
-        $c->innerJoin('comSection', 'Section', 'Section.id = Topic.parent');
+        $c = $this->modx->newQuery('comTopic', ['id' => $object->topic]);
+        $c->innerJoin('comSection', 'Section');
         $c->select('Section.alias');
         if ($c->prepare() && $c->stmt->execute()) {
             $properties = $this->App->getProperties($c->stmt->fetchColumn(), 'comment');
@@ -61,18 +60,14 @@ class CommunityVoteCommentProcessor extends modObjectProcessor
         } else {
             $vote->set('value', $rating);
         }
+        $this->modx->getRequest();
+        /** @var modRequest $request */
+        $request = $this->modx->request;
+        $vote->set('ip', $request->getClientIp()['ip']);
         $vote->save();
+        $object->rating(true);
 
-        $c = $this->modx->newQuery('comVote', ['id' => $object->id, 'class' => 'comComment']);
-        $c->select('SUM(value)');
-        if ($c->prepare() && $c->stmt->execute()) {
-            $object->set('rating', $c->stmt->fetchColumn());
-        }
-        $object->set('rating_plus', $this->modx->getCount('comVote', ['id' => $object->id, 'class' => 'comComment', 'value:>' => 0]));
-        $object->set('rating_minus', $this->modx->getCount('comVote', ['id' => $object->id, 'class' => 'comComment', 'value:<' => 0]));
-        $object->save();
-
-        return $this->success('', $object->get(['rating', 'rating_plus', 'rating_minus']));
+        return $this->success('', $object->get(['rating']));
     }
 
 }

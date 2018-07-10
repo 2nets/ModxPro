@@ -12,6 +12,8 @@ define('app', [
      * @property User
      * @property Slack
      * @property Community
+     * @property AdminPanel
+     * @property Rss
      */
     var App = {
         action_url: '/assets/components/modxpro/action.php',
@@ -38,8 +40,11 @@ define('app', [
                 return string;
             },
 
-            highlight: function () {
-                $('[class^="language-"]').each(function () {
+            highlight: function (elem) {
+                if (elem === undefined) {
+                    elem = $('body');
+                }
+                $('[class^="language-"]', elem).each(function () {
                     var $this = $(this);
                     var type = $this.attr('class').replace(/language-/, '');
                     requirejs(['prism'], function (Prism) {
@@ -335,7 +340,7 @@ define('app', [
                 e.preventDefault();
                 var $form = $(this);
                 var data = Backbone.Syphon.serialize($form);
-                data.action = $form.attr('action');
+                data['action'] = $form.attr('action');
                 $form.find('input, button').attr('disabled', true);
                 App.Utils.request(data, function () {
                     $form.find('input, button').attr('disabled', false);
@@ -511,13 +516,12 @@ define('app', [
             reset: 'reset',
             keydown: 'keyDown',
             'click [name="preview"]': 'preview',
-            'change input': function () {
-                this.dirty = true;
-            },
+            'click [name="draft"]': 'draft',
+            'click [name="publish"]': 'publish',
         },
 
         initialize: function () {
-            this.$el = $(this.el);
+            // this.$el = $(this.el);
             this.$submit = this.$el.find('[type="submit"]');
             this.$reset = this.$el.find('[type="reset"]');
             this.$preview = this.$el.find('[name="preview"]');
@@ -616,6 +620,13 @@ define('app', [
                                     ok: App.Utils.lexicon('office_support_ok'),
                                     cancel: App.Utils.lexicon('office_support_cancel'),
                                 }
+                            }, {
+                                separator: true
+                            }, {
+                                name: "Cut",
+                                icon: "anchor",
+                                shortcut: "",
+                                before: "<cut/>"
                             }]
                         });
                         $(this).removeAttr('disabled');
@@ -661,19 +672,18 @@ define('app', [
             App.Utils.request(data, function (res) {
                 form.enable();
                 form.success(res);
-                form.data = form.$el.serialize();
-                if (res.redirect) {
-                    window.location = res.redirect;
-                }
             }, function (res) {
                 form.enable();
-                if (res.redirect) {
-                    window.location = res.redirect;
-                }
+                form.failure(res);
             });
         },
 
-        reset: function () {
+        reset: function (res) {
+            if (res.redirect) {
+                window.location = res.redirect;
+            } else {
+                this.data = this.$el.serialize();
+            }
         },
 
         preview: function (e, data) {
@@ -687,9 +697,12 @@ define('app', [
             var form = this;
             App.Utils.request(data, function (res) {
                 form.enable();
-                if (res.object && res.object.data) {
-                    form.$preview_elem.show().html(res.object.data);
+                if (res.object && res.object.html) {
+                    form.$preview_elem.html(res.object.html).show();
                     form.$preview_close.show();
+                    $('html, body').animate({
+                        scrollTop: form.$preview_elem.offset().top || 0
+                    }, 200);
                     App.Utils.highlight();
                 }
             }, function () {
@@ -714,13 +727,18 @@ define('app', [
             // Enter
             else if (e.keyCode === 13) {
                 if (e.target.tagName === 'INPUT') {
-                    //e.preventDefault();
+                    e.preventDefault();
                     //this.submit(e);
                 }
             }
         },
 
-        success: function () {
+        success: function (res) {
+            if (res.redirect) {
+                window.location = res.redirect;
+            } else {
+                this.data = this.$el.serialize();
+            }
         },
 
         failure: function (res) {
@@ -745,7 +763,6 @@ define('app', [
                             .attr('title', err['msg']).attr('data-animation', false).tooltip('show');
                     }
                 }
-
             }
         },
 

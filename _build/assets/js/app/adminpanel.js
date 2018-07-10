@@ -12,7 +12,7 @@ define(['app', 'cookies'], function (App, Cookies) {
             active_opacity: 1
         },
 
-        init: function () {
+        initialize: function () {
             var $this = this;
             this.close.on('click touchend', function (e) {
                 e.preventDefault();
@@ -102,5 +102,5 @@ define(['app', 'cookies'], function (App, Cookies) {
         }
     };
 
-    App.AdminPanel.init();
+    App.AdminPanel.initialize();
 });

@@ -6,9 +6,9 @@
 <div class="comments-list">
     <h4 class="section-title">
         {if $.en}
-            Total {number_format($res['total'], 0, '.', ' ')} {$res['total'] | declension : 'comment|comments'}
+            Total {$res['total'] | number} {$res['total'] | declension : 'comment|comments'}
         {else}
-            Всего {number_format($res['total'], 0, '.', ' ')} {$res['total'] | declension : 'комментарий|комментария|комментариев'}
+            Всего {$res['total'] | number} {$res['total'] | declension : 'комментарий|комментария|комментариев'}
         {/if}
     </h4>
     {$res.results}

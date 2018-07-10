@@ -7,11 +7,11 @@
             <table>
                 <tr>
                     <th>{$.en ? 'Topics' : 'Заметки'}</th>
-                    <td>{number_format($author.tickets, 0, '.', ' ')}</td>
+                    <td>{$author.topics | number}</td>
                 </tr>
                 <tr>
                     <th>{$.en ? 'Comments' : 'Комментарии'}</th>
-                    <td>{number_format($author.comments, 0, '.', ' ')}</td>
+                    <td>{$author.comments | number}</td>
                 </tr>
                 <tr>
                     <th>{$.en ? 'Registration' : 'Регистрация'}</th>
@@ -60,22 +60,22 @@
                     <th>{$.en ? 'Total rating' : 'Итоговый рейтинг'}</th>
                     <td>
                         <span class="{if $author.rating > 0}text-success{/if}{if $author.rating < 0}text-danger{/if}">
-                            {number_format($author.rating, 1, '.', ' ')}
+                            {$author.rating | number : 1}
                         </span>
                     </td>
                 </tr>
                 <tr>
                     <th>{$.en ? 'Topics rating' : 'Рейтинг заметок'}</th>
                     <td>
-                        <span class="text-success">+ {number_format($author.votes_topics_up, 0, '.', ' ')}</span> /
-                        <span class="text-danger">- {number_format($author.votes_topics_down, 0, '.', ' ')}</span>
+                        <span class="text-success">+ {$author.topics_votes_up | number}</span> /
+                        <span class="text-danger">- {$author.topics_votes_down | number}</span>
                     </td>
                 </tr>
                 <tr>
                     <th>{$.en ? 'Comments rating' : 'Рейтинг комментов'}</th>
                     <td>
-                        <span class="text-success">+ {number_format($author.votes_comments_up, 0, '.', ' ')}</span> /
-                        <span class="text-danger">- {number_format($author.votes_comments_down, 0, '.', ' ')}</span>
+                        <span class="text-success">+ {$author.comments_votes_up | number}</span> /
+                        <span class="text-danger">- {$author.comments_votes_down | number}</span>
                     </td>
                 </tr>
                 <tr>
@@ -86,22 +86,22 @@
                 <tr>
                     <th class="pl-3">- {$.en ? 'topics' : 'заметки'}</th>
                     <td>
-                        {number_format($author.stars_topics, 0, '.', ' ')}
+                        {$author.topics_stars | number}
                         {if $.en}
-                            {$author.stars_topics | declension : 'time|times'}
+                            {$author.topics_stars | declension : 'time|times'}
                         {else}
-                            {$author.stars_topics | declension : 'раз|раза|раз'}
+                            {$author.topics_stars | declension : 'раз|раза|раз'}
                         {/if}
                     </td>
                 </tr>
                 <tr>
                     <th class="pl-3">- {$.en ? 'comments' : 'комментарии'}</th>
                     <td>
-                        {number_format($author.stars_comments, 0, '.', ' ')}
+                        {$author.comments_stars | number}
                         {if $.en}
-                            {$author.stars_comments | declension : 'time|times'}
+                            {$author.comments_stars | declension : 'time|times'}
                         {else}
-                            {$author.stars_comments | declension : 'раз|раза|раз'}
+                            {$author.comments_stars | declension : 'раз|раза|раз'}
                         {/if}
                     </td>
                 </tr>

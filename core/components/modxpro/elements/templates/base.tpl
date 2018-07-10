@@ -19,19 +19,24 @@
             </div>
             <div id="sidebar" class="sidebar col-12 mt-5 col-md-4 pl-md-3 mt-md-0">
                 {block 'sidebar'}
-                    <form method="get" action="/search" class="mb-5">
-                        <div class="input-group">
-                            <input type="text" name="query" class="form-control"
-                                   placeholder="{$.en ? 'Search' : 'Поиск'}">
-                            <div class="input-group-append">
-                                <button class="input-group-text">
-                                    <i class="far fa-search"></i>
-                                </button>
+                    {var $sidebar = ('sidebar' | placeholder)}
+                    {if !$sidebar}
+                        <form method="get" action="/search" class="mb-5">
+                            <div class="input-group">
+                                <input type="text" name="query" class="form-control"
+                                       placeholder="{$.en ? 'Search' : 'Поиск'}">
+                                <div class="input-group-append">
+                                    <button class="input-group-text">
+                                        <i class="far fa-search"></i>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    </form>
-                    {include 'file:chunks/_online.tpl'}
-                    {include 'file:chunks/promo/sidebar.tpl'}
+                        </form>
+                        {include 'file:chunks/_online.tpl'}
+                        {include 'file:chunks/promo/sidebar.tpl'}
+                    {else}
+                        {$sidebar}
+                    {/if}
                 {/block}
             </div>
         </div>

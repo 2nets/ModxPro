@@ -46,9 +46,11 @@ class AppRouter
                         $this->modx->sendRedirect($redirect, ['responseCode' => 'HTTP/1.1 301 Moved Permanently']);
                     });
                 });
-                $r->addRoute('GET', '/topic[/{id:\d+}]', 'editTopic');
+                $r->addRoute('GET', '/topic[/{id}]', 'editTopic');
                 $r->addRoute('GET', '/{section:[a-z]+}/{id:\d+}', 'viewTopic');
             }
+            $r->addRoute('GET', '/outside', 'outside');
+            $r->addRoute('GET', '/api', 'api');
         });
     }
 
@@ -130,20 +132,20 @@ class AppRouter
         switch ($mode) {
             case 'popular':
                 $params = array_merge($params, [
-                    'sort' => 'views',
+                    'sort' => 'comTopic.views',
                     'dir' => 'desc',
                     'where' => [
-                        'createdon:>' => $month,
+                        'comTopic.createdon:>' => $month,
                     ],
                 ]);
                 break;
             case 'best':
                 $params = array_merge($params, [
-                    'sort' => 'rating desc,createdon',
+                    'sort' => 'comTopic.rating desc,comTopic.publishedon',
                     'dir' => 'desc',
                     'where' => [
-                        'rating:>' => 0,
-                        'createdon:>' => $month,
+                        'comTopic.rating:>' => 0,
+                        'comTopic.publishedon:>' => $month,
                     ],
                 ]);
                 break;
@@ -202,7 +204,8 @@ class AppRouter
     {
         if (!in_array($this->modx->context->key, ['web', 'en'])) {
             $this->modx->sendRedirect('/');
-        } elseif (!$user = $this->getUser($vars['user'])) {
+        }
+        if (!$user = $this->getUser($vars['user'])) {
             return;
         }
 
@@ -216,9 +219,10 @@ class AppRouter
         $this->modx->resource = $this->modx->getObject('modResource', $this->modx->getOption('users_id'));
 
         // Prepare data
-        if (!$author = $this->modx->getObject('comAuthor', $user->id)) {
+        if (!$author = $this->modx->getObject('comAuthor', ['id' => $user->id])) {
             return;
         }
+
         $data = [
             'subpage' => $vars['subpage'],
             'user' => $user->get(['id', 'username', 'external_key']),
@@ -404,18 +408,16 @@ class AppRouter
         $c->select($this->modx->getSelectColumns('comTopic', 'comTopic'));
         $c->select($this->modx->getSelectColumns('modResource', 'Section', 'section_', ['pagetitle', 'context_key', 'uri']));
         $c->select($this->modx->getSelectColumns('modUserProfile', 'UserProfile', '', ['photo', 'email', 'fullname']));
-        if ($c->prepare() && $c->stmt->execute()) {
-            $topic = $c->stmt->fetch(PDO::FETCH_ASSOC);
-        }
-        if (!$topic) {
+        /** @var comTopic $topic */
+        if (!$topic = $this->modx->getObject('comTopic', $c)) {
             return;
         }
 
-        if ($vars['section'] != $topic['section_uri']) {
-            $this->modx->sendRedirect('/' . $topic['section_uri'] . '/' . $topic['id']);
+        if ($vars['section'] != $topic->section_uri) {
+            $this->modx->sendRedirect('/' . $topic->section_uri . '/' . $topic->id);
         }
 
-        if ($topic['section_context_key'] != $this->modx->context->key) {
+        if ($topic->section_context_key != $this->modx->context->key) {
             $host = $this->modx->getOption('http_host');
             $host = $this->modx->getOption('cultureKey') == 'en'
                 ? preg_replace('#^en\.#', '', $host)
@@ -425,48 +427,165 @@ class AppRouter
         }
 
         $this->modx->resource = $this->modx->getObject('modResource', $this->modx->getOption('blogs_id'));
-        if (!$topic['published'] && ($this->modx->user->id != $topic['createdby'] && !$this->modx->user->isMember('Administrator'))) {
+        if (!$topic->published && ($this->modx->user->id != $topic->createdby && !$this->modx->user->isMember('Administrator'))) {
             header('HTTP/1.0 403 Forbidden');
             $this->modx->resource->set('pagetitle', '');
-            $this->modx->resource->set('content', $this->pdoTools->getChunk('@FILE chunks/topics/unpublished.tpl', $topic));
+            $this->modx->resource->set('content', $this->pdoTools->getChunk('@FILE chunks/topics/unpublished.tpl', $topic->toArray()));
         } else {
+
             $this->modx->resource->set('is_topic', true);
             if ($this->modx->user->id) {
-                $topic['star'] = $this->modx->getCount('comStar', [
+                $topic->set('star', (bool)$this->modx->getCount('comStar', [
                     'class' => 'comTopic',
-                    'id' => $topic['id'],
+                    'id' => $topic->id,
                     'createdby' => $this->modx->user->id,
-                ]);
-                $properties = $this->App->getProperties($topic['section_uri']);
-                $topic['can_vote'] = $this->modx->user->isAuthenticated($this->modx->context->key) &&
-                    (strtotime($topic['createdon']) + $properties['voting']) > time();
+                ]));
             } else {
-                $topic['star'] = false;
+                $topic->set('star', false);
             }
-            $this->modx->resource->set('pagetitle', $topic['pagetitle']);
-            $this->modx->resource->set('content', $this->pdoTools->getChunk('@FILE chunks/topics/topic.tpl', $topic));
-            // Save view
-            if ($this->modx->user->id) {
-                $key = [
-                    'user_id' => $this->modx->user->id,
-                    'topic_id' => $topic['id'],
-                ];
-                if (!$view = $this->modx->getObject('comView', $key)) {
-                    /** @var comView $view */
-                    $view = $this->modx->newObject('comView');
-                    $view->fromArray($key, '', true, true);
-                }
-                $view->set('timestamp', date('Y-m-d H:i:s'));
-                $view->save();
-            }
+            $topic->set('can_edit', $topic->canEdit());
+            $topic->set('can_vote', $topic->canVote());
+            $this->modx->resource->set('pagetitle', $topic->pagetitle);
+            $this->modx->resource->set('content', $this->pdoTools->getChunk('@FILE chunks/topics/topic.tpl', $topic->toArray()));
+            $topic->addView();
         }
         $this->modx->request->prepareResponse();
     }
 
 
+    /**
+     * @param $vars
+     */
     public function editTopic($vars)
     {
-        //print_r($vars);die;
+        if (!$this->modx->user->isAuthenticated($this->modx->context->key)) {
+            $this->modx->sendForward($this->modx->getOption('unauthorized_page'));
+        }
+        if (!empty($vars['id']) && is_numeric($vars['id'])) {
+            $c = $this->modx->newQuery('comTopic', ['id' => (int)$vars['id']]);
+            $c->innerJoin('comSection', 'Section');
+            $c->select($this->modx->getSelectColumns('comTopic', 'comTopic'));
+            $c->select('Section.context_key');
+            if ($c->prepare() && $c->stmt->execute()) {
+                $topic = $c->stmt->fetch(PDO::FETCH_ASSOC);
+            }
+            if (empty($topic) || ($this->modx->user->id != $topic['createdby'] && !$this->modx->user->isMember('Administrator'))) {
+                return;
+            } elseif ($topic['context_key'] != $this->modx->context->key) {
+                $host = $this->modx->getOption('http_host');
+                $host = $this->modx->getOption('cultureKey') == 'en'
+                    ? preg_replace('#^en\.#', '', $host)
+                    : 'en.' . $host;
+                $url = '//' . $host . '/topic/' . implode('/', $vars);
+                $this->modx->sendRedirect($url);
+            }
+        } else {
+            $topic = $this->modx->newObject('comTopic');
+            $where = [
+                'class_key' => 'comSection',
+                'alias' => 'help',
+                'published' => true,
+                'deleted' => false,
+                'context_key' => $this->modx->context->key,
+            ];
+            if (!empty($vars['id'])) {
+                $where['alias'] = trim($vars['id']);
+            }
+            if ($help = $this->modx->getObject('comSection', $where)) {
+                $topic->set('parent', $help->get('id'));
+            } else {
+                $this->modx->sendRedirect('/topic');
+            }
+            $topic = $topic->toArray();
+        }
+
+        $this->modx->setPlaceholder('sidebar', $this->App->pdoTools->getChunk('@FILE chunks/topics/_rules.tpl'));
+        $sections = $this->modx->getIterator('comSection', [
+            'class_key' => 'comSection',
+            'published' => true,
+            'deleted' => false,
+            'context_key' => $this->modx->context->key,
+        ]);
+        /** @var comSection $section */
+        foreach ($sections as $section) {
+            if ($section->checkPolicy('save')) {
+                $topic['sections'][] = $section->get(['id', 'pagetitle']);
+            }
+        }
+
+        $params = $topic;
+        $params['id'] = $topic['parent'];
+        /** @var modProcessorResponse $res */
+        if ($res = $this->App->runProcessor('community/topic/getsection', $params)) {
+            $topic = array_merge($topic, $res['object']);
+        }
+
+        $this->modx->resource = $this->modx->getObject('modResource', $this->modx->getOption('blogs_id'));
+        $this->modx->resource->set('pagetitle', $this->modx->lexicon('topic'));
+        $this->modx->resource->set('content', $this->pdoTools->getChunk('@FILE chunks/topics/_form.tpl', $topic));
+
+        $this->modx->request->prepareResponse();
     }
 
+
+    /**
+     *
+     */
+    public function outside()
+    {
+        if (empty($_GET['url'])) {
+            return;
+        }
+
+        $url = $_GET['url'];
+        $html = "<script>window.opener = null;window.location.replace('{$url}');</script>";
+        $html .= "<noscript><META http-equiv=\"refresh\" content=\"0;URL = '{$url}'\"></noscript>";
+
+        exit($html);
+    }
+
+
+    /**
+     *
+     */
+    public function api()
+    {
+        $response = [
+            'success' => false,
+            'message' => '',
+            'object' => [],
+        ];
+
+        $req = $_REQUEST;
+        if (!empty($req['action'])) {
+            switch ($req['action']) {
+                case 'comments':
+                    $c = $this->modx->newQuery('comTopic', ['published' => true]);
+                    $c->innerJoin('modUserProfile', 'UserProfile');
+                    $c->innerJoin('comComment', 'Comment', 'Comment.id = comTopic.last_comment');
+                    $c->select('Comment.id, Comment.content as text, Comment.createdon, Comment.createdby');
+                    $c->select('comTopic.pagetitle, comTopic.uri, UserProfile.fullname as name');
+                    $c->sortby('comTopic.publishedon', 'desc');
+                    $c->limit((int)$_REQUEST['limit'] != 0 ? (int)$_REQUEST['limit'] : 3);
+                    if (!empty($req['packages'])) {
+                        $packages = array_map('trim', explode(',', $req['packages']));
+                        if (!empty($packages) && $packages[0] != '') {
+                            foreach ($packages as $package) {
+                                $c->orCondition([
+                                    'comTopic.pagetitle:LIKE' => "%{$package}%",
+                                ], null, 2);
+                            }
+                        }
+                    }
+                    if ($c->prepare() && $c->stmt->execute()) {
+                        $response['success'] = true;
+                        $response['object'] = $c->stmt->fetchAll(PDO::FETCH_ASSOC);
+                    }
+                    break;
+            }
+        }
+        $response['time'] = microtime(true) - $this->modx->startTime;
+
+        exit(json_encode($response, JSON_UNESCAPED_UNICODE));
+    }
 }

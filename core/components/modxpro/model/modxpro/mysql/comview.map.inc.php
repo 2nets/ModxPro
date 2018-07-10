@@ -10,31 +10,31 @@ $xpdo_meta_map['comView']= array (
   ),
   'fields' => 
   array (
-    'topic_id' => NULL,
-    'user_id' => NULL,
-    'timestamp' => NULL,
+    'topic' => NULL,
+    'createdby' => NULL,
+    'createdon' => NULL,
   ),
   'fieldMeta' => 
   array (
-    'topic_id' => 
+    'topic' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
       'attributes' => 'unsigned',
       'null' => false,
       'index' => 'pk',
     ),
-    'user_id' => 
+    'createdby' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
       'attributes' => 'unsigned',
       'null' => false,
       'index' => 'pk',
     ),
-    'timestamp' => 
+    'createdon' => 
     array (
       'dbtype' => 'datetime',
       'phptype' => 'datetime',
@@ -51,13 +51,13 @@ $xpdo_meta_map['comView']= array (
       'type' => 'BTREE',
       'columns' => 
       array (
-        'topic_id' => 
+        'topic' => 
         array (
           'length' => '',
           'collation' => 'A',
           'null' => false,
         ),
-        'user_id' => 
+        'createdby' => 
         array (
           'length' => '',
           'collation' => 'A',
@@ -71,7 +71,7 @@ $xpdo_meta_map['comView']= array (
     'User' => 
     array (
       'class' => 'modUser',
-      'local' => 'user_id',
+      'local' => 'createdby',
       'foreign' => 'id',
       'cardinality' => 'one',
       'owner' => 'foreign',
@@ -79,7 +79,7 @@ $xpdo_meta_map['comView']= array (
     'UserProfile' => 
     array (
       'class' => 'modUserProfile',
-      'local' => 'user_id',
+      'local' => 'createdby',
       'foreign' => 'internalKey',
       'cardinality' => 'one',
       'owner' => 'foreign',
@@ -87,7 +87,7 @@ $xpdo_meta_map['comView']= array (
     'Topic' => 
     array (
       'class' => 'comTopic',
-      'local' => 'parent',
+      'local' => 'topic',
       'foreign' => 'id',
       'cardinality' => 'one',
       'owner' => 'foreign',

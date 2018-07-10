@@ -19,7 +19,7 @@
                 </div>
                 <div class="col-12 col-md-6 mt-2 mt-md-0 col-md-3 ml-md-auto d-flex justify-content-around justify-content-md-end">
                     <div class="d-flex">
-                        <div class="link-comment">
+                        <div class="link">
                             <a href="/{$item.uri}/{$item.topic}#comment-{$item.id}">
                                 <i class="far fa-hashtag"></i>
                             </a>
@@ -68,7 +68,7 @@
                 </div>
             </div>
             <div class="comment-text mt-2">
-                {$item.text | escape | prism}
+                {$item.content | escape | prism}
             </div>
             <div class="comment-footer mt-2 d-flex flex-wrap justify-content-center justify-content-md-start">
                 <div>

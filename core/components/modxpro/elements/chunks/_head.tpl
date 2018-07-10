@@ -28,12 +28,10 @@
 {('/assets/components/modxpro/css/web/main.css?v=' ~ $.assets_version) | cssToHead}
 {('/assets/components/modxpro/js/web/lib/require.min.js?v=' ~ $.assets_version) | jsToHead : false}
 {('/assets/components/modxpro/js/web/config.js?v=' ~ $.assets_version) | jsToHead : false}
-{if !$_modx->isAuthenticated()}
-    {'<script type="text/javascript">requirejs(["app/auth"]);</script>' | htmlToBottom}
-{else}
-    {'<script type="text/javascript">requirejs(["app/community"]);</script>' | htmlToBottom}
+{if !$_modx->isAuthenticated($_modx->context.key)}
+    {'<script>requirejs(["app/auth"]);</script>' | htmlToBottom}
 {/if}
 {if $_modx->isMember('Administrator')}
-    {'<script type="text/javascript">requirejs(["app/adminpanel"]);</script>' | htmlToBottom}
+    {'<script>requirejs(["app/adminpanel"]);</script>' | htmlToBottom}
 {/if}
-{'<script type="text/javascript">requirejs(["app/counters"]);</script>' | htmlToBottom}
+{'<script>requirejs(["app/community", "app/counters"]);</script>' | htmlToBottom}

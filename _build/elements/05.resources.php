@@ -14,7 +14,7 @@ return [
                     'id' => 1001,
                     'pagetitle' => 'Вопросы',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'help',
                     'uri_override' => true,
                     'description' => 'Здесь можно задавать различные вопросы про MODX, хостинги, базы данных, программирование и вообще - что угодно.',
@@ -22,7 +22,7 @@ return [
                 'news' => [
                     'pagetitle' => 'Новости и события',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'news',
                     'uri_override' => true,
                     'description' => 'Новости, объявления, ссылки на интересные заметки с других сайтов.',
@@ -30,7 +30,7 @@ return [
                 'hosting' => [
                     'pagetitle' => 'Хостинг',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'hosting',
                     'uri_override' => true,
                     'description' => 'Новости и заметки, касающиеся разного вида хостингов: shared, vps, cloud и какие там еще бывают?',
@@ -38,7 +38,7 @@ return [
                 'solutions' => [
                     'pagetitle' => 'Готовые решения',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'solutions',
                     'uri_override' => true,
                     'description' => 'Готовые решения каких-то распространённых проблем. Например, переключение контекстов на мультиязычном сайте.',
@@ -46,7 +46,7 @@ return [
                 'work' => [
                     'pagetitle' => 'Объявления о работе',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'work',
                     'uri_override' => true,
                     'description' => 'Понятные и подробные объявления о работе, с указанием требований, цен, сроков и контактов. Комментарии в этом разделе отключены!',
@@ -54,7 +54,7 @@ return [
                 'crowdfunding' => [
                     'pagetitle' => 'Краудфандинг',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'crowdfunding',
                     'uri_override' => true,
                     'description' => 'Специальный раздел со сбором средств для разработки чего-либо для сообщества. Исправление ошибок компонентов, написание нового функционала.',
@@ -62,7 +62,7 @@ return [
                 'howto' => [
                     'pagetitle' => 'Пошаговые инструкции',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'howto',
                     'uri_override' => true,
                     'description' => 'Понятные пошаговые инструкции по работе с MODX и не только.',
@@ -70,7 +70,7 @@ return [
                 'store' => [
                     'pagetitle' => 'Магазин дополнений',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'store',
                     'uri_override' => true,
                     'description' => 'Новости и заметки, касающиеся магазина дополнений.',
@@ -78,7 +78,7 @@ return [
                 'components' => [
                     'pagetitle' => 'Новые дополнения и их версии',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'components',
                     'uri_override' => true,
                     'description' => 'Анонсы новых дополнений для MODX или их версий.',
@@ -86,7 +86,7 @@ return [
                 'security' => [
                     'pagetitle' => 'Безопасность',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'security',
                     'uri_override' => true,
                     'description' => 'Раздел посвящен разным вопросам безопасности: движков, сайтов и хостингов.',
@@ -94,7 +94,7 @@ return [
                 'development' => [
                     'pagetitle' => 'Для разработчиков',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'development',
                     'uri_override' => true,
                     'description' => 'Раздел для разработчиков: javascript, php, xpdo и другие непонятные слова.',
@@ -102,7 +102,7 @@ return [
                 'sites' => [
                     'pagetitle' => 'Сайты на MODX',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'sites',
                     'uri_override' => true,
                     'description' => 'Готовые сайты, созданные с применением нашей любимой системы. Рассказы о создании.',
@@ -122,6 +122,11 @@ return [
         ],
         'chat' => [
             'pagetitle' => 'Чат',
+        ],
+        'rss' => [
+            'uri' => 'rss/config',
+            'uri_override' => true,
+            'pagetitle' => 'Rss',
         ],
         'service' => [
             'id' => 100,
@@ -159,7 +164,8 @@ return [
                     'pagetitle' => 'Sitemap',
                     'template' => 0,
                     'hidemenu' => true,
-                    'content_type' => 'text/xml',
+                    'contentType' => 'text/xml',
+                    'content_type' => 2,
                     'uri' => 'sitemap.xml',
                     'uri_override' => true,
                 ],
@@ -167,15 +173,17 @@ return [
                     'pagetitle' => 'Robots.txt',
                     'template' => 0,
                     'hidemenu' => true,
-                    'content_type' => 'text/plain',
+                    'contentType' => 'text/plain',
+                    'content_type' => 3,
                     'uri' => 'robots.txt',
                     'uri_override' => true,
                 ],
                 'rss' => [
-                    'pagetitle' => 'RSS',
+                    'pagetitle' => 'Rss Feed',
                     'template' => 0,
                     'hidemenu' => true,
-                    'content_type' => 'application/rss+xml',
+                    'contentType' => 'application/rss+xml',
+                    'content_type' => 6,
                     'uri' => 'rss',
                     'uri_override' => true,
                 ],
@@ -195,7 +203,7 @@ return [
                     'id' => 2001,
                     'pagetitle' => 'Questions',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'help',
                     'uri_override' => true,
                     'description' => 'Here you can ask any questions about MODX, web hosting, databases, programming, and anything else.',
@@ -203,7 +211,7 @@ return [
                 'news' => [
                     'pagetitle' => 'News and announcements',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'news',
                     'uri_override' => true,
                     'description' => 'News, announcements, links to interesting posts from other sites.',
@@ -211,7 +219,7 @@ return [
                 'hosting' => [
                     'pagetitle' => 'Hosting',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'hosting',
                     'uri_override' => true,
                     'description' => 'News and notes about the different types of hosting: shared, vps, cloud and what else they can be?',
@@ -219,7 +227,7 @@ return [
                 'solutions' => [
                     'pagetitle' => 'Solutions',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'solutions',
                     'uri_override' => true,
                     'description' => 'Ready solutions for common problems. For example, context switching in a multilingual website.',
@@ -227,7 +235,7 @@ return [
                 'work' => [
                     'pagetitle' => 'Jobs',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'work',
                     'uri_override' => true,
                     'description' => 'Clear and detailed listings of jobs, specifying requirements, prices, deadlines and contacts. Comments in this section are disabled!',
@@ -235,7 +243,7 @@ return [
                 'crowdfunding' => [
                     'pagetitle' => 'Crowdfunding',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'crowdfunding',
                     'uri_override' => true,
                     'description' => 'Special section with a collection of tools for developing something for the community. Error correction components, writing new functionality.',
@@ -243,7 +251,7 @@ return [
                 'howto' => [
                     'pagetitle' => 'How to',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'howto',
                     'uri_override' => true,
                     'description' => 'Clear step by step instructions for working with MODX.',
@@ -251,7 +259,7 @@ return [
                 'store' => [
                     'pagetitle' => 'Extras store',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'store',
                     'uri_override' => true,
                     'description' => 'News and notes about components from modstore.pro.',
@@ -259,7 +267,7 @@ return [
                 'components' => [
                     'pagetitle' => 'New extras and updates',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'components',
                     'uri_override' => true,
                     'description' => 'Announcements about updates and new versions of components for MODX.',
@@ -267,7 +275,7 @@ return [
                 'security' => [
                     'pagetitle' => 'Security',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'security',
                     'uri_override' => true,
                     'description' => 'Section focuses on different safety issues: engines, websites and hosting.',
@@ -275,7 +283,7 @@ return [
                 'development' => [
                     'pagetitle' => 'For developers',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'development',
                     'uri_override' => true,
                     'description' => 'Section for developers: javascript, php, xpdo, and other incomprehensible words.',
@@ -283,7 +291,7 @@ return [
                 'sites' => [
                     'pagetitle' => 'MODX sites',
                     'template' => 3,
-                    'class_key' => 'modDocument',
+                    'class_key' => 'comSection',
                     'uri' => 'sites',
                     'uri_override' => true,
                     'description' => 'The stories about the creation of sites made using our favorite system.',
@@ -303,6 +311,11 @@ return [
         ],
         'chat' => [
             'pagetitle' => 'Chat',
+        ],
+        'rss' => [
+            'uri' => 'rss/config',
+            'uri_override' => true,
+            'pagetitle' => 'Rss',
         ],
         'service' => [
             'id' => 600,
@@ -340,7 +353,8 @@ return [
                     'pagetitle' => 'Sitemap',
                     'template' => 0,
                     'hidemenu' => true,
-                    'content_type' => 'text/xml',
+                    'contentType' => 'text/xml',
+                    'content_type' => 2,
                     'uri' => 'sitemap.xml',
                     'uri_override' => true,
                 ],
@@ -348,15 +362,17 @@ return [
                     'pagetitle' => 'Robots.txt',
                     'template' => 0,
                     'hidemenu' => true,
-                    'content_type' => 'text/plain',
+                    'contentType' => 'text/plain',
+                    'content_type' => 3,
                     'uri' => 'robots.txt',
                     'uri_override' => true,
                 ],
                 'rss' => [
-                    'pagetitle' => 'RSS',
+                    'pagetitle' => 'Rss Feed',
                     'template' => 0,
                     'hidemenu' => true,
-                    'content_type' => 'application/rss+xml',
+                    'contentType' => 'application/rss+xml',
+                    'content_type' => 6,
                     'uri' => 'rss',
                     'uri_override' => true,
                 ],

@@ -6,7 +6,7 @@ class TopicGetListProcessor extends AppGetListProcessor
 {
     public $objectType = 'comTopic';
     public $classKey = 'comTopic';
-    public $defaultSortField = 'createdon';
+    public $defaultSortField = 'publishedon';
     public $defaultSortDirection = 'desc';
 
     public $getPages = true;
@@ -35,7 +35,7 @@ class TopicGetListProcessor extends AppGetListProcessor
             if ($q->prepare() && $q->stmt->execute()) {
                 $this->modx->queryTime += microtime(true) - $tstart;
                 $this->modx->executedQueries++;
-                $where[$this->classKey . '.id:IN'] = $q->stmt->fetchAll(PDO::FETCH_COLUMN) ?: -1;
+                $where[$this->classKey . '.id:IN'] = $q->stmt->fetchAll(PDO::FETCH_COLUMN) ?: [-1];
             }
         } else {
             $where['context'] = $this->modx->context->key;
@@ -78,8 +78,6 @@ class TopicGetListProcessor extends AppGetListProcessor
             $c->leftJoin('modUser', 'User');
             $c->leftJoin('modUserProfile', 'UserProfile');
             if ($this->modx->user->id) {
-                $c->leftJoin('comThread', 'Thread');
-                $c->select('Thread.id as thread');
                 $c->leftJoin('comStar', 'Star', 'Star.id = comTopic.id AND Star.class = "comTopic" AND Star.createdby = ' . $this->modx->user->id);
                 $c->select('Star.id as star');
                 $c->leftJoin('comVote', 'Vote', 'Vote.id = comTopic.id AND Vote.class = "comTopic" AND Vote.createdby = ' . $this->modx->user->id);
@@ -104,13 +102,13 @@ class TopicGetListProcessor extends AppGetListProcessor
             /** @var comView $view */
             $view = $this->App->pdoTools->getArray(
                 'comView',
-                ['topic_id' => $array['id'], 'user_id' => $this->modx->user->id],
-                ['select' => 'timestamp']
+                ['topic' => $array['id'], 'createdby' => $this->modx->user->id],
+                ['select' => 'createdon']
             );
-            if ($view && !empty($array['thread'])) {
+            if ($view) {
                 $array['new_comments'] = $this->modx->getCount('comComment', [
-                    'thread' => $array['thread'],
-                    'createdon:>' => $view['timestamp'],
+                    'topic' => $array['id'],
+                    'createdon:>' => $view['createdon'],
                     'createdby:!=' => $this->modx->user->id,
                 ]);
             }
@@ -119,8 +117,9 @@ class TopicGetListProcessor extends AppGetListProcessor
         }
 
         $properties = $this->App->getProperties($array['section_uri']);
-        $array['can_vote'] = $this->modx->user->isAuthenticated($this->modx->context->key) &&
-            (strtotime($array['createdon']) + $properties['voting']) > time();
+        $array['can_vote'] = $this->modx->user->isAuthenticated($this->modx->context->key)
+            && $array['createdby'] != $this->modx->user->id
+            && (strtotime($array['createdon']) + $properties['voting']) > time();
 
         return $array;
     }

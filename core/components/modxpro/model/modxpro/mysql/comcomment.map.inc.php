@@ -10,15 +10,13 @@ $xpdo_meta_map['comComment']= array (
   ),
   'fields' => 
   array (
-    'thread' => NULL,
+    'topic' => NULL,
     'parent' => NULL,
-    'text' => '',
+    'content' => '',
     'raw' => '',
     'ip' => '0.0.0.0',
     'stars' => 0,
     'rating' => 0,
-    'rating_plus' => 0,
-    'rating_minus' => 0,
     'createdon' => NULL,
     'createdby' => NULL,
     'editedon' => NULL,
@@ -30,9 +28,9 @@ $xpdo_meta_map['comComment']= array (
   ),
   'fieldMeta' => 
   array (
-    'thread' => 
+    'topic' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
       'attributes' => 'unsigned',
@@ -46,7 +44,7 @@ $xpdo_meta_map['comComment']= array (
       'attributes' => 'unsigned',
       'null' => false,
     ),
-    'text' => 
+    'content' => 
     array (
       'dbtype' => 'text',
       'phptype' => 'string',
@@ -70,7 +68,7 @@ $xpdo_meta_map['comComment']= array (
     ),
     'stars' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
       'attributes' => 'unsigned',
@@ -79,24 +77,8 @@ $xpdo_meta_map['comComment']= array (
     ),
     'rating' => 
     array (
-      'dbtype' => 'smallint',
-      'precision' => '5',
-      'phptype' => 'integer',
-      'null' => true,
-      'default' => 0,
-    ),
-    'rating_plus' => 
-    array (
-      'dbtype' => 'smallint',
-      'precision' => '5',
-      'phptype' => 'integer',
-      'null' => true,
-      'default' => 0,
-    ),
-    'rating_minus' => 
-    array (
-      'dbtype' => 'smallint',
-      'precision' => '5',
+      'dbtype' => 'integer',
+      'precision' => '10',
       'phptype' => 'integer',
       'null' => true,
       'default' => 0,
@@ -209,15 +191,15 @@ $xpdo_meta_map['comComment']= array (
         ),
       ),
     ),
-    'thread' => 
+    'topic' => 
     array (
-      'alias' => 'thread',
+      'alias' => 'topic',
       'primary' => false,
       'unique' => false,
       'type' => 'BTREE',
       'columns' => 
       array (
-        'thread' => 
+        'topic' => 
         array (
           'length' => '',
           'collation' => 'A',
@@ -255,7 +237,7 @@ $xpdo_meta_map['comComment']= array (
       'type' => 'BTREE',
       'columns' => 
       array (
-        'thread' => 
+        'topic' => 
         array (
           'length' => '',
           'collation' => 'A',
@@ -294,6 +276,29 @@ $xpdo_meta_map['comComment']= array (
   ),
   'composites' => 
   array (
+    'Children' => 
+    array (
+      'class' => 'comComment',
+      'local' => 'id',
+      'foreign' => 'parent',
+      'cardinality' => 'many',
+      'owner' => 'local',
+    ),
+    'Votes' => 
+    array (
+      'class' => 'comVote',
+      'local' => 'id',
+      'foreign' => 'id',
+      'cardinality' => 'many',
+      'owner' => 'local',
+      'criteria' => 
+      array (
+        'foreign' => 
+        array (
+          'class' => 'comComment',
+        ),
+      ),
+    ),
     'Stars' => 
     array (
       'class' => 'comStar',
@@ -328,10 +333,10 @@ $xpdo_meta_map['comComment']= array (
       'cardinality' => 'one',
       'owner' => 'foreign',
     ),
-    'Thread' => 
+    'Topic' => 
     array (
-      'class' => 'comThread',
-      'local' => 'thread',
+      'class' => 'comTopic',
+      'local' => 'topic',
       'foreign' => 'id',
       'cardinality' => 'one',
       'owner' => 'foreign',
@@ -343,14 +348,6 @@ $xpdo_meta_map['comComment']= array (
       'foreign' => 'id',
       'cardinality' => 'one',
       'owner' => 'foreign',
-    ),
-    'Children' => 
-    array (
-      'class' => 'comComment',
-      'local' => 'id',
-      'foreign' => 'parent',
-      'cardinality' => 'many',
-      'owner' => 'local',
     ),
   ),
 );

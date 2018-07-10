@@ -28,16 +28,8 @@ $packages = [
         'version' => '1.7.1-pl',
         'service_url' => 'modstore.pro',
     ],
-    'mSearch2' => [
-        'version' => '1.10.3-pl',
-        'service_url' => 'modstore.pro',
-    ],
     'Jevix' => [
         'version' => '1.2.2-pl',
-        'service_url' => 'modstore.pro',
-    ],
-    'Tickets' => [
-        'version' => '1.8.1-pl',
         'service_url' => 'modstore.pro',
     ],
     'DateAgo' => [

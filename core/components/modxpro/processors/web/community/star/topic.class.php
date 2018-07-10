@@ -24,29 +24,28 @@ class CommunityStarTopicProcessor extends modProcessor
         $key = [
             'id' => (int)$this->getProperty('id'),
             'class' => 'comTopic',
-            'createdby' => $this->modx->user->id
+            'createdby' => $this->modx->user->id,
         ];
+
+        /** @var comTopic $object */
+        $object = $this->modx->getObject('comTopic', ['id' => $key['id'], 'published' => true]);
+        if (!$object) {
+            return $this->failure($this->modx->lexicon('access_denied'));
+        }
 
         /** @var comStar $star */
         if (!$star = $this->modx->getObject($this->classKey, $key)) {
             $star = $this->modx->newObject($this->classKey, $key);
             $star->fromArray($key, '', true, true);
             $star->set('createdon', date('Y-m-d H:i:s'));
-            /** @var comTopic $object */
-            if ($object = $this->modx->getObject('comTopic', $key['id'])) {
-                $star->set('owner', $object->createdby);
-            }
+            $star->set('owner', $object->createdby);
             $star->save();
         } else {
             $star->remove();
         }
+        $object->stars(true);
 
-        if ($topic = $star->getOne('Topic')) {
-            $topic->set('stars', $this->modx->getCount('comStar', ['id' => $topic->id, 'class' => 'comTopic']));
-            $topic->save();
-        }
-
-        return $this->success('', $topic ? $topic->get(['stars']) : 0);
+        return $this->success('', $object->get(['stars']));
     }
 
 }

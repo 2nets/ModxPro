@@ -34,8 +34,7 @@ header {
     .navbar-hide {
       width: 36px;
       &::after {
-        display: none;
-        font-family: 'Font Awesome 5 Regular';
+        font-family: 'Font Awesome 5 Pro';
         content: "\f00d";
       }
       &.collapsed::after {
@@ -48,10 +47,10 @@ header {
     .user {
       &.login {
         .dropdown-toggle {
-          &::after {
-            display: none;
+          &::after { display: none; }
+          .fa-chevron-down {
+            transition: transform ease-in-out .1s;
           }
-          svg { transition: transform ease-in-out .1s; }
         }
         .show {
           .dropdown-toggle {
@@ -88,6 +87,10 @@ header {
             padding: 5px 15px;
             width: 100%;
             line-height: 28px;
+            .far {
+              display: inline-block;
+              width: 14px;
+            }
             a {
               color: $gray-dark;
               display: block;
@@ -95,14 +98,30 @@ header {
                 color: $link-color;
                 text-decoration: none;
               }
-              &.logout {
-                display: flex;
-                align-items: center;
-                svg { margin-left: auto; }
-                &::after {
-                  display: none;
-                  font-family: 'Font Awesome 5 Regular';
-                  content: '\f08b';
+            }
+          }
+          .authorized {
+            padding: 0 15px 5px 15px;
+            margin-top: -5px;
+            line-height: 20px;
+            font-size: 12px;
+            .item {
+              margin-top: 10px;
+              .name, .email {
+                line-height: 14px;
+              }
+              .avatar img {
+                height: 32px;
+                width: 32px;
+                border-radius: 32px;
+                margin-right: 10px;
+              }
+              a {
+                color: inherit;
+                &.fa-sign-out { font-size: 14px; }
+                &:hover {
+                  text-decoration: none;
+                  color: $link-color;
                 }
               }
             }

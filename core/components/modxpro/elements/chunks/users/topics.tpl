@@ -52,7 +52,7 @@
             ]}
         {/if}
 
-        {$res.results}
+        {$res.results ?: '<div class="alert alert-info">'~($.en ? 'There`s nothing here' : 'Здесь ничего нет') ~'</div>'}
         {include 'file:chunks/_pagination.tpl' res=$res}
     </div>
 </div>

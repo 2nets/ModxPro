@@ -25,18 +25,16 @@
             {/if}
         </div>
         <div class="views ml-md-3">
-            <i class="far fa-eye"></i> {number_format($item.views, 0, ',', ' ')}
+            <i class="far fa-eye"></i> {$item.views | number}
         </div>
         <div class="comments ml-md-3">
             {if strpos($item.uri, 'work') !== 0}
                 {if !$_modx->resource.is_topic}
                     <a href="/{$item.uri}#comments">
-                {/if}
-                <i class="far fa-comment"></i> {$item.comments}
-                {if !$_modx->resource.is_topic && $item.new_comments}
-                    <span class="text-success"> +{$item.new_comments}</span>
-                {/if}
-                {if !$_modx->resource.is_topic}
+                        <i class="far fa-comment"></i> {$item.comments}
+                        {if $item.new_comments}
+                            <span class="text-success"> +{$item.new_comments}</span>
+                        {/if}
                     </a>
                 {/if}
             {/if}

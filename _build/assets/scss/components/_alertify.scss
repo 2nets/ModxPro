@@ -38,7 +38,7 @@
     box-shadow: 0 3px 7px rgba(0, 0, 0, .32);
     background: $modal-backdrop-bg;
 
-    &.ajs-capture:before {
+    &.ajs-capture::before {
       content: '';
       position: absolute;
       top: 0;

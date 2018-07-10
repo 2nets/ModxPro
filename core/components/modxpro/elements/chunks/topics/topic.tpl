@@ -11,15 +11,8 @@
         {$pagetitle}
     </h1>
 
-    {if $createdby == $_modx->user.id || $_modx->isMember('Administrator')}
-        <div class="buttons">
-            <a href="/topic/{$id}" class="btn btn-sm btn-outline-primary">
-                <i class="far fa-edit"></i> {$.en ? 'Edit topic' : 'Изменить заметку'}
-            </a>
-            <a href="#draft" class="btn btn-sm btn-outline-danger">
-                <i class="far fa-power-off"></i> {$.en ? 'Move to drafts' : 'Убрать в черновики'}
-            </a>
-        </div>
+    {if $can_edit}
+        {include 'file:chunks/topics/_actions.tpl' item=$_pls}
     {/if}
 
     <div class="topic-content">
@@ -28,12 +21,28 @@
     {include 'file:chunks/topics/_meta.tpl' item=$_pls user=$user}
     {include 'file:chunks/promo/page.tpl'}
 
-    <div class="topic-comments">
-        {var $res = 'community/comment/getcomments' | processor : [
+    {if $section_uri != 'work'}
+        <div class="topic-comments">
+            {var $res = 'community/comment/getcomments' | processor : [
             'topic' => $id,
             'limit' => 0,
-        ]}
+            ]}
 
-        {$res.results}
-    </div>
+            {$res.results}
+        </div>
+    {else}
+        <div class="alert alert-warning mt-5">
+            {if $.en}
+                <p>Comments in this section <b>are disabled</b>, so you must specify your contacts directly in the
+                    topic, or activate sending <a href="//id.modx.pro">messages from your profile</a>.</p>
+                <p>Please note that <b>modx.pro</b> does not bear any responsibility for doing the work or paying for
+                    the order. This is just a message board, then you communicate outside of our site.</p>
+            {else}
+                <p>Комментарии в этом разделе <b>отключены</b>, так что вы должны указать свои контакты прямо в
+                    объявлении, или активировать отправку <a href="//id.modx.pro">сообщений из профиля</a>.</p>
+                <p>Обратите внимание, что <b>modx.pro</b> не несёт никакой ответственности за выполнение работы или
+                    оплату заказа. Это просто доска объявлений, дальше вы общаетесь за пределами нашей площадки.</p>
+            {/if}
+        </div>
+    {/if}
 </div>

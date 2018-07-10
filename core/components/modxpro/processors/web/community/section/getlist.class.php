@@ -9,7 +9,6 @@ class SectionGetListProcessor extends AppGetListProcessor
     public $defaultSortField = 'comSection.publishedon';
     public $defaultSortDirection = 'desc';
 
-    public $getPages = true;
     public $tpl = '@FILE chunks/sections/list.tpl';
 
 
@@ -21,11 +20,10 @@ class SectionGetListProcessor extends AppGetListProcessor
     public function prepareQueryBeforeCount(xPDOQuery $c)
     {
         $where = [
+            $this->classKey . '.class_key' => 'comSection',
             $this->classKey . '.published' => true,
             $this->classKey . '.deleted' => false,
             $this->classKey . '.context_key' => $this->modx->context->key,
-            // @TODO Maybe replace it to class_key?
-            $this->classKey . '.template' => 3,
         ];
 
         $c->groupby('comSection.id');

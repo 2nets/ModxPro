@@ -9,27 +9,29 @@
     "backbone": "1.*",
     "backbone.epoxy": "1.*",
     "backbone.syphon": "0.*",
-    "bootstrap": "4.*",
+    "bootstrap": "^4.1.1",
     "fancybox": "3.*",
     "font-awesome-pro": "git+ssh://git@github.com/FortAwesome/Font-Awesome-Pro.git",
+    "install": "^0.11.0",
     "jquery": "3.*",
     "jquery-form": "4.*",
     "js-cookie": "2.*",
     "markitup": "3.0.0-0",
-    "moment": "~>2.19.3",
+    "moment": "^2.22.2",
     "numeral": "2.*",
-    "prismjs": "1.*",
-    "requirejs": "2.*"
+    "prismjs": "^1.14.0",
+    "requirejs": "2.*",
+    "sisyphus.js": "1.*"
   },
   "devDependencies": {
-    "gulp": "3.*",
+    "gulp": "^3.9.1",
     "gulp-chmod": "2.*",
-    "gulp-clean-css": "3.*",
-    "gulp-rename": "1.*",
-    "gulp-sass": "3.*",
-    "gulp-uglify": "2.*",
+    "gulp-clean-css": "^3.9.4",
     "gulp-concat": "2.*",
+    "gulp-imagemin": "^4.1.0",
     "gulp-purifycss": "0.*",
-    "gulp-imagemin": "^4.1.0"
+    "gulp-rename": "^1.2.3",
+    "gulp-sass": "3.*",
+    "gulp-uglify": "2.*"
   }
 }

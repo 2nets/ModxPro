@@ -26,27 +26,26 @@ class CommunityStarCommentProcessor extends modObjectProcessor
             'class' => 'comComment',
             'createdby' => $this->modx->user->id,
         ];
+
+        /** @var comComment $object */
+        $object = $this->modx->getObject('comComment', ['id' => $key['id'], 'deleted' => false]);
+        if (!$object) {
+            return $this->failure($this->modx->lexicon('access_denied'));
+        }
+
         /** @var comStar $star */
         if (!$star = $this->modx->getObject($this->classKey, $key)) {
             $star = $this->modx->newObject($this->classKey, $key);
             $star->fromArray($key, '', true, true);
             $star->set('createdon', date('Y-m-d H:i:s'));
-            /** @var comComment $object */
-            if ($object = $this->modx->getObject('comComment', $key['id'])) {
-                $star->set('owner', $object->createdby);
-            }
+            $star->set('owner', $object->createdby);
             $star->save();
-
         } else {
             $star->remove();
         }
+        $object->stars(true);
 
-        if ($comment = $star->getOne('Comment')) {
-            $comment->set('stars', $this->modx->getCount('comStar', ['id' => $comment->id, 'class' => 'comComment']));
-            $comment->save();
-        }
-
-        return $this->success('', $comment ? $comment->get(['stars']) : 0);
+        return $this->success('', $object->get(['stars']));
     }
 
 }

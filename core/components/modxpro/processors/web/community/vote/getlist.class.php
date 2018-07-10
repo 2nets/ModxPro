@@ -7,7 +7,7 @@ class VotesGetListProcessor extends AppGetListProcessor
     public $objectType = 'comVote';
     public $classKey = 'comVote';
     public $defaultSortField = 'comVote.createdon';
-    public $defaultSortDirection = 'asc';
+    public $defaultSortDirection = 'desc';
 
     public $tpl = '@FILE chunks/topics/votes.tpl';
     protected $_max_limit = 0;

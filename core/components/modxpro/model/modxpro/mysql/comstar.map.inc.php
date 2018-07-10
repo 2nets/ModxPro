@@ -20,7 +20,7 @@ $xpdo_meta_map['comStar']= array (
   array (
     'id' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
       'attributes' => 'unsigned',
@@ -37,7 +37,7 @@ $xpdo_meta_map['comStar']= array (
     ),
     'owner' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
       'attributes' => 'unsigned',
@@ -52,7 +52,7 @@ $xpdo_meta_map['comStar']= array (
     ),
     'createdby' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
       'attributes' => 'unsigned',

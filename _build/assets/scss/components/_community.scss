@@ -39,23 +39,26 @@
   .star {
     a { text-decoration: none; }
     div::before {
-      font-family: 'Font Awesome 5 Regular';
+      font-family: 'Font Awesome 5 Pro';
       content: '\f005';
-      display: none;
     }
     &.active {
       div::before {
-        font-family: 'Font Awesome 5 Solid';
+        font-family: 'Font Awesome 5 Pro';
+        font-weight: 900;
       }
     }
   }
 }
 
-#topic-page {
+#topic-page, .topic-row {
   .buttons {
     margin-top: 1rem;
     justify-content: normal;
   }
+}
+
+#topic-page {
   .topic-title {
     font-size: 2rem;
   }
@@ -70,14 +73,25 @@
 .topics-list {
   .topic-row {
     margin-top: 50px;
+    .buttons + .topic-content {
+      margin-top: 1.5rem;
+    }
+    .topic-content {
+      margin-top: 10px;
+    }
     &:first-child {
       margin-top: 0;
+    }
+    &.important {
+      padding: 10px;
+      border-radius: $border-radius;
+      background: rgba(255, 200, 0, .1);
     }
   }
   .topic-title {
     font-size: 1.8rem;
     margin: .5rem 0;
-    a { color: $gray-dark; }
+    a:not(.btn) { color: $gray-dark; }
   }
   .topic-content {
     img { max-width: 100%; }
@@ -105,8 +119,20 @@
         color: #8a6d3b;
       }
     }
+    &.bad {
+      .comment-text { transition: opacity .5s ease; }
+      &.bad5 .comment-text { opacity: 0.3;}
+      &.bad4 .comment-text { opacity: 0.45;}
+      &.bad3 .comment-text { opacity: 0.6;}
+      &.bad2 .comment-text { opacity: 0.75;}
+      &.bad1 .comment-text { opacity: 0.9;}
+    }
     &:first-child {
       margin-top: 0;
+    }
+    &:hover {
+      .admin-actions { opacity: 1; }
+      .comment-text { opacity: 1; }
     }
     .comment-meta {
       @include media-breakpoint-up(md) {
@@ -125,16 +151,19 @@
           color: $gray-dark;
           text-decoration: none;
         }
-        div::before {
-          font-family: 'Font Awesome 5 Regular';
+        div:before {
+          font-family: 'Font Awesome 5 Pro';
           content: '\f005';
-          display: none;
         }
         &.active {
-          div::before {
-            font-family: 'Font Awesome 5 Solid';
+          div:before {
+            font-family: 'Font Awesome 5 Pro';
+            font-weight: 900;
           }
         }
+      }
+      .goto {
+        span { cursor: pointer; }
       }
     }
     .comment-text {
@@ -161,6 +190,10 @@
       img {
         border-radius: 100px;
       }
+    }
+    .admin-actions {
+      transition: opacity .5s ease;
+      opacity: 0;
     }
   }
   &.thread {
@@ -210,6 +243,9 @@
 
 ul.comments-list {
   padding-left: 25px;
+  @include media-breakpoint-down(sm) {
+    padding-left: 0;
+  }
 }
 
 .comments-latest, .topics-latest {
@@ -296,5 +332,60 @@ ul.comments-list {
       border-radius: 25px;
       margin-right: 5px;
     }
+  }
+}
+
+.topic-form {
+  .buttons {
+    padding: 20px 0;
+    border-top: 1px solid $border-color;
+  }
+  @include media-breakpoint-up(md) {
+    .topic-fields {
+      .col-md-6 {
+        &:nth-child(even) {
+          padding-left: 15px;
+        }
+        &:nth-child(odd) {
+          padding-right: 15px;
+        }
+      }
+    }
+    border-top-left-radius: 50px;
+    border-bottom-left-radius: 50px;
+  }
+}
+
+#comment-form {
+  display: none;
+}
+
+.topic-row, .topic-comments {
+  .subscription {
+    font-size: .9rem;
+    label {
+      padding-top: .1rem;
+    }
+  }
+}
+
+#comments-panel {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  margin-top: -35px;
+  .btn {
+    width: 50px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .new {
+    border-top: 1px solid $border-color;
+    //display: none;
+  }
+  @include media-breakpoint-down(sm) {
+    display: none;
   }
 }

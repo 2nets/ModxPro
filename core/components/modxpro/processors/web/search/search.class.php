@@ -142,17 +142,19 @@ class SearchGetListProcessor extends AppGetListProcessor
         $snippet = (new SphinxQL($this->conn))
             ->enqueue(
                 Helper::create($this->conn)->callSnippets([
-                    $array['pagetitle'],
-                    $array['content'] . $this->data[$array['id']]['comment'],
+                    $this->modx->stripTags(html_entity_decode($array['pagetitle'])),
+                    $this->modx->stripTags(html_entity_decode($array['content'] . $this->data[$array['id']]['comment'])),
                 ],
-                    $this->modx->context->key == 'web' ? 'topics_ru' : 'topics_en',
+                    $this->modx->context->key == 'web'
+                        ? 'topics_ru'
+                        : 'topics_en',
                     $this->getProperty('query'), ['use_boundaries' => true]
                 )
             )
             ->execute();
         if ($data = $snippet->fetchAllNum()) {
-            $array['pagetitle'] = $data[0][0];
-            $array['introtext'] = $data[1][0];
+            $array['pagetitle'] = $this->modx->stripTags($data[0][0], '<b>');
+            $array['introtext'] = $this->modx->stripTags($data[1][0], '<b>');
         }
 
         return parent::prepareArray($array);

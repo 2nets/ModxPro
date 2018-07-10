@@ -43,6 +43,13 @@ return [
         'area' => 'furls',
         'namespace' => 'core',
     ],
+    'allow_tags_in_post' => [
+        'key' => 'allow_tags_in_post',
+        'xtype' => 'combo-boolean',
+        'value' => true,
+        'area' => 'system',
+        'namespace' => 'core',
+    ],
 
     'pdotools_elements_path' => [
         'key' => 'pdotools_elements_path',
@@ -57,13 +64,6 @@ return [
         'value' => '',
         'area' => 'ap_style',
         'namespace' => 'adminpanel',
-    ],
-    'mse2_filters_handler_class' => [
-        'key' => 'mse2_filters_handler_class',
-        'xtype' => 'textfield',
-        'value' => 'comFilterHandler',
-        'area' => 'mse2_main',
-        'namespace' => 'msearch2',
     ],
 
     'office_frontend_css' => [

@@ -15,6 +15,7 @@ class App
                 'star' => .5, // rating you will get for each star
                 'required' => -100, // this rating you need to create topic in this section
                 'voting' => 7 * 86400, // time for voting
+                //'edit' => 7 * 86400, // time for edit
             ],
             'comment' => [
                 'create' => 0,
@@ -22,6 +23,7 @@ class App
                 'star' => .2,
                 'required' => -100,
                 'voting' => 7 * 86400,
+                'edit' => 600,
             ],
         ],
         'help' => [
@@ -101,7 +103,7 @@ class App
         ],
     ];
 
-    const assets_version = '1.18-dev';
+    const assets_version = '1.04-rc';
     const avatars_path = 'images/avatars/';
     const gravatars_cache = 86400;
 
@@ -193,6 +195,10 @@ class App
                     'array_keys',
                     'array_values',
                     'strpos',
+                    'abs',
+                    'strtotime',
+                    'time',
+                    'date',
                 ]);
 
                 $fenom->addAccessorSmart('App', 'App', Fenom::ACCESSOR_PROPERTY);
@@ -205,21 +211,21 @@ class App
                 $fenom->assets_version = $this::assets_version;
 
                 $fenom->addAccessorSmart('switch_link', 'switch_link', Fenom::ACCESSOR_PROPERTY);
-                if ($this->modx->context->key == 'en') {
-                    $fenom->switch_link = '//' . preg_replace('#^en\.#', '', $_SERVER['HTTP_HOST']) .
-                        preg_replace('#\?.*#', '', $_SERVER['REQUEST_URI']);
-                } elseif ($this->modx->context->key == 'id') {
+                if ($this->modx->context->key == 'id') {
                     $lang = $this->modx->getOption('cultureKey') == 'en' ? 'ru' : 'en';
                     $fenom->switch_link = strpos($_SERVER['REQUEST_URI'], '?') !== false
                         ? $_SERVER['REQUEST_URI'] . '&lang=' . $lang
                         : $_SERVER['REQUEST_URI'] . '?lang=' . $lang;
                 } else {
-                    $fenom->switch_link = '//en.' . $_SERVER['HTTP_HOST'];
-                    if (!empty($this->modx->resource) && !empty($this->modx->resource->is_topic)) {
-                        $fenom->switch_link .= preg_replace('#\/\d+(?:\?.*)?#', '', $_SERVER['REQUEST_URI']);
-                    } else {
-                        $fenom->switch_link .= preg_replace('#\?.*#', '', $_SERVER['REQUEST_URI']);
-                    }
+                    $link = $this->modx->context->key == 'en'
+                        ? '//' . preg_replace('#^en\.#', '', $_SERVER['HTTP_HOST'])
+                        : '//en.' . $_SERVER['HTTP_HOST'];
+                    /** @noinspection PhpUndefinedFieldInspection */
+                    $link .= !empty($this->modx->resource) && !empty($this->modx->resource->is_topic)
+                        ? preg_replace('#\/\d+(?:\?.*)?#', '', $_SERVER['REQUEST_URI'])
+                        : preg_replace('#\?.*#', '', $_SERVER['REQUEST_URI']);
+                    /** @noinspection PhpUndefinedFieldInspection */
+                    $fenom->switch_link = $link;
                 }
 
                 $fenom->addModifier('avatar', function ($data, $size = 30, $tpl = null) use ($app) {
@@ -290,10 +296,52 @@ class App
 
                     return $output;
                 });
+
+                $fenom->addModifier('author', function ($user, $field = 'rating') {
+                    if (is_numeric($user)) {
+                        $id = $user;
+                    } elseif (is_array($user) && !empty($user['id'])) {
+                        $id = $user['id'];
+                    } else {
+                        return false;
+                    }
+                    if (!$author = $this->modx->getObject('comAuthor', (int)$id)) {
+                        return false;
+                    }
+
+                    return $author->$field;
+                });
+
+                $fenom->addModifier('number', function ($number, $decimals = 0) {
+                    return number_format($number, $decimals, '.', ' ');
+                });
+
+                $fenom->addModifier('subscribed', function ($id, $class = 'comSection') {
+                    return $this->modx->getCount('comSubscriber', [
+                        'id' => $id,
+                        'createdby' => $this->modx->user->id,
+                        'class' => $class,
+                    ]);
+                });
+
+                $fenom->addModifier('abs_url', function ($input) {
+                    preg_match_all('#(?:href|src)=[\'|"](.*?)[\'|"]#s', $input, $matches);
+                    if (!empty($matches[1])) {
+                        $url = $this->modx->getOption('site_url');
+                        foreach ($matches[1] as $v) {
+                            if (strpos($v, '://') === false) {
+                                $input = str_replace($v, $url . ltrim($v, '/'), $input);
+                            }
+                        }
+                    }
+
+                    return $input;
+                });
                 break;
 
             case 'OnHandleRequest':
                 if ($this->modx->context->key != 'mgr') {
+//                    echo '<pre>';print_r($_SESSION);die;
                     /** @var AppRouter $router */
                     if ($router = $this->modx->getService('AppRouter', 'AppRouter', $this->config['modelPath'])) {
                         $router->process();
@@ -556,6 +604,33 @@ class App
             : $this->properties['default'][$type];
 
         return $properties[$type];
+    }
+
+
+    /**
+     * @param string $string
+     *
+     * @return array|mixed|null|string|string[]
+     */
+    public function sanitizeString($string = '')
+    {
+        if (is_array($string)) {
+            foreach ($string as $key => $value) {
+                $string[$key] = $this->sanitizeString($value);
+            }
+
+            return $string;
+        }
+
+        $string = htmlentities(trim($string), ENT_QUOTES, 'UTF-8');
+        $string = preg_replace('#^@.*\b#', '', $string);
+        $string = str_replace(
+            ['[', ']', '`', '{', '}'],
+            ['&#91;', '&#93;', '&#96;', '&#123;', '&#125;'],
+            $string
+        );
+
+        return $string;
     }
 
 

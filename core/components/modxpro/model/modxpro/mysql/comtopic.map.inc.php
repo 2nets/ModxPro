@@ -28,16 +28,19 @@ $xpdo_meta_map['comTopic']= array (
     'views' => 0,
     'stars' => 0,
     'rating' => 0,
-    'rating_plus' => NULL,
-    'rating_minus' => NULL,
+    'closed' => NULL,
+    'last_comment' => NULL,
+    'status' => NULL,
+    'money' => NULL,
+    'days' => NULL,
   ),
   'fieldMeta' => 
   array (
     'parent' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
-      'phptype' => 'int',
+      'phptype' => 'integer',
       'attributes' => 'unsigned',
       'null' => false,
     ),
@@ -71,9 +74,9 @@ $xpdo_meta_map['comTopic']= array (
     ),
     'createdby' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
-      'phptype' => 'int',
+      'phptype' => 'integer',
       'attributes' => 'unsigned',
       'null' => false,
     ),
@@ -93,9 +96,9 @@ $xpdo_meta_map['comTopic']= array (
     ),
     'publishedby' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
-      'phptype' => 'int',
+      'phptype' => 'integer',
       'attributes' => 'unsigned',
       'null' => true,
       'default' => 0,
@@ -108,9 +111,9 @@ $xpdo_meta_map['comTopic']= array (
     ),
     'editedby' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
-      'phptype' => 'int',
+      'phptype' => 'integer',
       'attributes' => 'unsigned',
       'null' => true,
     ),
@@ -138,7 +141,7 @@ $xpdo_meta_map['comTopic']= array (
     ),
     'comments' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
       'attributes' => 'unsigned',
@@ -146,7 +149,7 @@ $xpdo_meta_map['comTopic']= array (
     ),
     'views' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
       'attributes' => 'unsigned',
@@ -155,7 +158,7 @@ $xpdo_meta_map['comTopic']= array (
     ),
     'stars' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
       'attributes' => 'unsigned',
@@ -164,24 +167,46 @@ $xpdo_meta_map['comTopic']= array (
     ),
     'rating' => 
     array (
-      'dbtype' => 'smallint',
-      'precision' => '5',
+      'dbtype' => 'integer',
+      'precision' => '10',
       'phptype' => 'integer',
       'null' => true,
       'default' => 0,
     ),
-    'rating_plus' => 
+    'closed' => 
     array (
-      'dbtype' => 'smallint',
-      'precision' => '5',
+      'dbtype' => 'tinyint',
+      'precision' => '1',
+      'phptype' => 'boolean',
+      'null' => false,
+    ),
+    'last_comment' => 
+    array (
+      'dbtype' => 'integer',
+      'precision' => '10',
+      'phptype' => 'integer',
+      'null' => true,
+    ),
+    'status' => 
+    array (
+      'dbtype' => 'tinyint',
+      'precision' => '1',
       'phptype' => 'integer',
       'null' => true,
       'attributes' => 'unsigned',
     ),
-    'rating_minus' => 
+    'money' => 
     array (
-      'dbtype' => 'smallint',
-      'precision' => '5',
+      'dbtype' => 'integer',
+      'precision' => '10',
+      'phptype' => 'integer',
+      'null' => true,
+      'attributes' => 'unsigned',
+    ),
+    'days' => 
+    array (
+      'dbtype' => 'integer',
+      'precision' => '10',
       'phptype' => 'integer',
       'null' => true,
       'attributes' => 'unsigned',
@@ -353,28 +378,75 @@ $xpdo_meta_map['comTopic']= array (
         ),
       ),
     ),
+    'last_comment' => 
+    array (
+      'alias' => 'last_comment',
+      'primary' => false,
+      'unique' => false,
+      'type' => 'BTREE',
+      'columns' => 
+      array (
+        'last_comment' => 
+        array (
+          'length' => '',
+          'collation' => 'A',
+          'null' => false,
+        ),
+      ),
+    ),
+    'closed' => 
+    array (
+      'alias' => 'closed',
+      'primary' => false,
+      'unique' => false,
+      'type' => 'BTREE',
+      'columns' => 
+      array (
+        'closed' => 
+        array (
+          'length' => '',
+          'collation' => 'A',
+          'null' => false,
+        ),
+      ),
+    ),
   ),
   'composites' => 
   array (
-    'Thread' => 
+    'Comments' => 
     array (
-      'class' => 'comThread',
+      'class' => 'comComment',
       'local' => 'id',
       'foreign' => 'topic',
-      'cardinality' => 'one',
+      'cardinality' => 'many',
       'owner' => 'local',
     ),
     'Views' => 
     array (
       'class' => 'comView',
       'local' => 'id',
-      'foreign' => 'topic_id',
+      'foreign' => 'topic',
       'cardinality' => 'many',
       'owner' => 'local',
     ),
     'Stars' => 
     array (
       'class' => 'comStar',
+      'local' => 'id',
+      'foreign' => 'id',
+      'cardinality' => 'many',
+      'owner' => 'local',
+      'criteria' => 
+      array (
+        'foreign' => 
+        array (
+          'class' => 'comTopic',
+        ),
+      ),
+    ),
+    'Subscribers' => 
+    array (
+      'class' => 'comSubscriber',
       'local' => 'id',
       'foreign' => 'id',
       'cardinality' => 'many',
@@ -408,7 +480,7 @@ $xpdo_meta_map['comTopic']= array (
     ),
     'Section' => 
     array (
-      'class' => 'modResource',
+      'class' => 'comSection',
       'local' => 'parent',
       'foreign' => 'id',
       'cardinality' => 'one',

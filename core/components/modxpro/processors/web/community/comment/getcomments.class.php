@@ -2,7 +2,7 @@
 
 require_once dirname(dirname(dirname(__FILE__))) . '/getlist.class.php';
 
-class CommentGetThreadProcessor extends AppGetListProcessor
+class CommentGetCommentsProcessor extends AppGetListProcessor
 {
     public $objectType = 'comComment';
     public $classKey = 'comComment';
@@ -12,10 +12,10 @@ class CommentGetThreadProcessor extends AppGetListProcessor
     public $_max_limit = 0;
     public $getPages = false;
     public $tpl = '@FILE chunks/comments/comments.tpl';
-    /** @var comThread $thread */
-    protected $thread;
-    /** @var int $properties */
-    protected $voting;
+    /** @var comTopic $topic */
+    protected $topic;
+    /** @var array $props */
+    protected $props;
 
 
     /**
@@ -24,14 +24,13 @@ class CommentGetThreadProcessor extends AppGetListProcessor
     public function initialize()
     {
         $initialize = parent::initialize();
-        if (!$this->thread = $this->modx->getObject('comThread', ['topic' => (int)$this->getProperty('topic')])) {
+
+        if (!$this->topic = $this->modx->getObject('comTopic', (int)$this->getProperty('topic'))) {
             return $this->modx->lexicon('access_denied');
         }
-        $c = $this->modx->newQuery('comTopic', ['id' => $this->thread->topic]);
-        $c->innerJoin('comSection', 'Section');
-        $c->select('Section.alias');
-        if ($c->prepare() && $c->stmt->execute()) {
-            $this->voting = $this->App->getProperties($c->stmt->fetchColumn(), 'comment')['voting'];
+        /** @var comSection $section */
+        if ($section = $this->topic->getOne('Section')) {
+            $this->props = $this->App->getProperties($section->alias, 'comment');
         } else {
             return $this->modx->lexicon('access_denied');
         }
@@ -48,7 +47,7 @@ class CommentGetThreadProcessor extends AppGetListProcessor
     public function prepareQueryBeforeCount(xPDOQuery $c)
     {
         $c->where([
-            'thread' => $this->thread->id,
+            'topic' => $this->topic->id,
         ]);
 
         return $c;
@@ -88,14 +87,20 @@ class CommentGetThreadProcessor extends AppGetListProcessor
     public function outputArray(array $array, $count = false)
     {
         $count = count($array);
+        /** @var comView $view */
         $view = $this->modx->getObject('comView', [
-            'topic_id' => $this->thread->topic,
-            'user_id' => $this->modx->user->id,
+            'topic' => $this->topic->id,
+            'createdby' => $this->modx->user->id,
         ]);
         $array = [
             'comments' => $this->buildTree($array),
-            'seen' => $view ? $view->get('timestamp') : false,
-            'thread' => $this->thread->toArray(),
+            'topic' => $this->topic->get(['id', 'createdby', 'comments']),
+            'seen' => $view
+                ? $view->get('createdon')
+                : false,
+            'new' => $view
+                ? $this->modx->getCount($this->classKey, ['createdon:>' => $view->createdon, 'topic' => $this->topic->id])
+                : 0,
         ];
 
         return parent::outputArray($array, $count);
@@ -136,12 +141,22 @@ class CommentGetThreadProcessor extends AppGetListProcessor
      */
     public function prepareArray(array $array)
     {
-        $array['can_vote'] = $this->modx->user->isAuthenticated($this->modx->context->key) &&
-            (strtotime($array['createdon']) + $this->voting) > time();
+        $time = time();
+        $array['can_vote'] = !$array['deleted'] &&
+            $this->modx->user->isAuthenticated($this->modx->context->key) &&
+            $array['createdby'] != $this->modx->user->id &&
+            (strtotime($array['createdon']) + $this->props['voting']) > $time;
+
+        $array['can_edit'] = !$array['deleted'] && (
+                $this->modx->user->isMember('Administrator') || (
+                    empty($array['children']) && $this->modx->user->id == $array['createdby'] &&
+                    (strtotime($array['createdon']) + $this->props['edit']) > $time
+                )
+            );
 
         return $array;
     }
 
 }
 
-return 'CommentGetThreadProcessor';
+return 'CommentGetCommentsProcessor';

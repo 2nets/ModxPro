@@ -21,10 +21,10 @@
         <h4 class="topic-title">
             {if $res.total}
                 {if $.en}
-                    Found {number_format($res.total, 0, '.', ' ')} {$res.total | declension : 'topic|topics'}
+                    Found {$res.total | number} {$res.total | declension : 'topic|topics'}
                 {else}
                     {$res.total | declension : 'Найдена|Найдено|Найдено'}
-                    {number_format($res.total, 0, '.', ' ')} {$res.total | declension : 'заметка|заметки|заметок'}
+                    {$res.total | number} {$res.total | declension : 'заметка|заметки|заметок'}
                 {/if}
             {else}
                 {$.en ? 'Nothing found' : 'Ничего не найдено'}

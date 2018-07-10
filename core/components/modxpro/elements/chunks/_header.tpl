@@ -4,8 +4,8 @@
     <nav class="navbar navbar-expand-md navbar-light bg-light">
         <div class="container">
             <a class="navbar-brand order-1" href="/">
-                <img src="/assets/components/modxpro/img/logo.png" title="" alt="{'http_host' | config}"
-                     srcset="/assets/components/modxpro/img/logo@2x.png 2x">
+                <img src="/assets/components/modxpro/img/logo2.png" title="" alt="{'http_host' | config}"
+                     srcset="/assets/components/modxpro/img/logo2@2x.png 2x">
             </a>
 
             <div class="collapse navbar-collapse order-md-2 order-10" id="navbar-menu">

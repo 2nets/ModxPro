@@ -11,14 +11,14 @@
         </div>
         <a href="/{$item.uri}#comment-{$item.id}" class="link">
             <div class="text">
-                {$item.text | strip_tags | escape | truncate : 150}
+                {$item.content | strip_tags | escape | truncate : 150}
             </div>
         </a>
         <div class="d-flex align-items-center meta">
             <i class="far fa-file mr-1"></i>
-            {$item.pagetitle | truncate : 50}
+            {$item.pagetitle | truncate : 100}
             {if strpos($item.uri, 'work') !== 0}
-                <i class="far fa-comment ml-3"></i><span class="ml-1">{$item.comments}</span>
+                <i class="far fa-comment ml-auto"></i><span class="ml-1">{$item.comments}</span>
             {/if}
         </div>
     </div>

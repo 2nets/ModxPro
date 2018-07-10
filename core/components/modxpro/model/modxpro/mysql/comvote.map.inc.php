@@ -22,7 +22,7 @@ $xpdo_meta_map['comVote']= array (
   array (
     'id' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
       'attributes' => 'unsigned',
@@ -39,7 +39,7 @@ $xpdo_meta_map['comVote']= array (
     ),
     'owner' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
       'attributes' => 'unsigned',
@@ -62,7 +62,7 @@ $xpdo_meta_map['comVote']= array (
     ),
     'createdby' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
       'attributes' => 'unsigned',

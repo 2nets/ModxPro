@@ -32,7 +32,7 @@ class CommentGetListProcessor extends AppGetListProcessor
             if ($q->prepare() && $q->stmt->execute()) {
                 $this->modx->queryTime += microtime(true) - $tstart;
                 $this->modx->executedQueries++;
-                $where[$this->classKey . '.id:IN'] = $q->stmt->fetchAll(PDO::FETCH_COLUMN);
+                $where[$this->classKey . '.id:IN'] = $q->stmt->fetchAll(PDO::FETCH_COLUMN) ?: [-1];
             }
         } else {
             $where[$this->classKey . '.context'] = $this->modx->context->key;
@@ -49,7 +49,7 @@ class CommentGetListProcessor extends AppGetListProcessor
         if ($query = $this->getProperty('query')) {
             $query = trim($query);
             $c->where([
-                $this->classKey . '.text:LIKE' => "%{$query}%",
+                $this->classKey . '.content:LIKE' => "%{$query}%",
             ]);
         }*/
 
@@ -64,8 +64,7 @@ class CommentGetListProcessor extends AppGetListProcessor
      */
     public function prepareQueryAfterCount(xPDOQuery $c)
     {
-        $c->leftJoin('comThread', 'Thread');
-        $c->leftJoin('comTopic', 'Topic', 'Thread.topic = Topic.id');
+        $c->leftJoin('comTopic', 'Topic');
         $c->leftJoin('comSection', 'Section', 'Section.id = Topic.parent');
         $c->leftJoin('modUser', 'User');
         $c->leftJoin('modUserProfile', 'UserProfile');
@@ -76,10 +75,9 @@ class CommentGetListProcessor extends AppGetListProcessor
             $c->select('Vote.value as vote');
         }
         $c->select($this->modx->getSelectColumns($this->classKey, $this->classKey));
-        $c->select('Thread.topic, Thread.comments');
         $c->select('User.username');
         $c->select('UserProfile.fullname, UserProfile.photo, UserProfile.email, UserProfile.usename');
-        $c->select('Topic.pagetitle as topic_title, Section.uri, Section.pagetitle as section_title');
+        $c->select('Topic.pagetitle as topic_title, Section.uri, Section.pagetitle as section_title, Topic.comments');
 
         return $c;
     }
@@ -93,8 +91,9 @@ class CommentGetListProcessor extends AppGetListProcessor
     public function prepareArray(array $array)
     {
         $properties = $this->App->getProperties($array['uri']);
-        $array['can_vote'] = $this->modx->user->isAuthenticated($this->modx->context->key) &&
-            (strtotime($array['createdon']) + $properties['voting']) > time();
+        $array['can_vote'] = $this->modx->user->isAuthenticated($this->modx->context->key)
+            && $array['createdby'] != $this->modx->user->id
+            && (strtotime($array['createdon']) + $properties['voting']) > time();
 
         return $array;
     }

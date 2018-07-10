@@ -36,7 +36,7 @@ class CommunityVoteTopicProcessor extends modProcessor
         /** @var comTopic $object */
         $object = $this->modx->getObject('comTopic', $key['id']);
         /** @var comSection $section */
-        if (!$object || !$section = $object->getOne('Section')) {
+        if (!$object || $object->createdby == $this->modx->user->id || !$section = $object->getOne('Section')) {
             return $this->failure($this->modx->lexicon('access_denied'));
         }
 
@@ -55,18 +55,14 @@ class CommunityVoteTopicProcessor extends modProcessor
         } else {
             $vote->set('value', $rating);
         }
+        $this->modx->getRequest();
+        /** @var modRequest $request */
+        $request = $this->modx->request;
+        $vote->set('ip', $request->getClientIp()['ip']);
         $vote->save();
+        $object->rating(true);
 
-        $c = $this->modx->newQuery('comVote', ['id' => $object->id, 'class' => 'comTopic']);
-        $c->select('SUM(value)');
-        if ($c->prepare() && $c->stmt->execute()) {
-            $object->set('rating', $c->stmt->fetchColumn());
-        }
-        $object->set('rating_plus', $this->modx->getCount('comVote', ['id' => $object->id, 'class' => 'comTopic', 'value:>' => 0]));
-        $object->set('rating_minus', $this->modx->getCount('comVote', ['id' => $object->id, 'class' => 'comTopic', 'value:<' => 0]));
-        $object->save();
-
-        return $this->success('', $object->get(['rating', 'rating_plus', 'rating_minus']));
+        return $this->success('', $object->get(['rating']));
     }
 
 }

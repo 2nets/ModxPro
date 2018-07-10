@@ -44,7 +44,7 @@ gulp.task('css', function () {
     var dst = assets + 'css/web/';
     gulp.src(src)
         .pipe(sass().on('error', sass.logError))
-        .pipe(purify([assets + 'js/web/**/*.js', core + 'elements/**/*.tpl']))
+        // .pipe(purify([assets + 'js/web/**/*.js', core + 'elements/**/*.tpl']))
         .pipe(cssmin().on('error', function (e) {console.log(e)}))
         .pipe(gulp.dest(dst));
 });
@@ -59,14 +59,15 @@ gulp.task('copy', function () {
         './node_modules/alertifyjs/build/alertify.min.js',
         './node_modules/requirejs/require.js',
         './node_modules/bootstrap/dist/js/bootstrap.bundle.min.js',
-        './node_modules/prismjs/prism.js',
+        // './node_modules/prismjs/prism.js',
         './node_modules/js-cookie/src/js.cookie.js',
         './node_modules/markitup/dist/markitup.min.js',
         './node_modules/jquery-form/dist/jquery.form.min.js',
         './node_modules/moment/min/moment-with-locales.min.js',
         './node_modules/numeral/min/numeral.min.js',
         './node_modules/fancybox/dist/js/jquery.fancybox.js',
-        '../../../assets/components/pdotools/js/pdopage.js',
+        './node_modules/sisyphus.js/sisyphus.min.js',
+        //'../../../assets/components/pdotools/js/pdopage.js',
     ];
     var dst = assets + 'js/web/lib/';
 
@@ -88,6 +89,8 @@ gulp.task('copy', function () {
         .pipe(gulp.dest(dst));
 
     // Fonts
+    gulp.src('./node_modules/font-awesome-pro/web-fonts-with-css/webfonts/**').pipe(gulp.dest(assets + 'fonts/'));
+    /*
     src = [
         './node_modules/font-awesome-pro/svg-with-js/js/fontawesome.js',
         './node_modules/font-awesome-pro/svg-with-js/js/fa-brands.js',
@@ -98,6 +101,20 @@ gulp.task('copy', function () {
     ];
     gulp.src(src)
         .pipe(concat('fontawesome.min.js'))
+        .pipe(uglify())
+        .pipe(chmod({
+            owner: {read: true, write: true, execute: false},
+            group: {read: true, write: false, execute: false},
+            others: {read: true, write: false, execute: false}
+        }))
+        .pipe(gulp.dest(dst));
+    */
+    src = [
+        './node_modules/prismjs/prism.js',
+        './node_modules/prismjs/components/prism-markup-templating.js',
+    ];
+    gulp.src(src)
+        .pipe(concat('prism.min.js'))
         .pipe(uglify())
         .pipe(chmod({
             owner: {read: true, write: true, execute: false},
@@ -126,7 +143,7 @@ gulp.task('copy', function () {
         }))
         .pipe(gulp.dest(dst));
 
-    gulp.src('./node_modules/fancybox/dist/img/**').pipe(gulp.dest(assets + 'img/fancybox/'))
+    gulp.src('./node_modules/fancybox/dist/img/**').pipe(gulp.dest(assets + 'img/fancybox/'));
 });
 
 gulp.task('images', function () {

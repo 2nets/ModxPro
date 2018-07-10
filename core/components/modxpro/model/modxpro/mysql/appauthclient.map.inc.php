@@ -57,9 +57,9 @@ $xpdo_meta_map['appAuthClient']= array (
     ),
     'user_id' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
-      'phptype' => 'int',
+      'phptype' => 'integer',
       'null' => true,
     ),
     'title' => 

@@ -11,38 +11,34 @@ $xpdo_meta_map['comAuthor']= array (
   'fields' => 
   array (
     'id' => NULL,
-    'rating' => NULL,
     'createdon' => NULL,
     'visitedon' => NULL,
     'topics' => NULL,
     'comments' => NULL,
-    'views' => 0,
-    'votes_topics' => 0.0,
-    'votes_comments' => 0.0,
-    'stars_topics' => 0,
-    'stars_comments' => 0,
-    'votes_topics_up' => 0,
-    'votes_topics_down' => 0,
-    'votes_comments_up' => 0,
-    'votes_comments_down' => 0,
+    'rating' => NULL,
+    'rating_topics_create' => 0.0,
+    'rating_topics_votes' => 0.0,
+    'rating_topics_stars' => 0,
+    'rating_comments_create' => 0.0,
+    'rating_comments_votes' => 0.0,
+    'rating_comments_stars' => 0,
+    'topics_votes_up' => 0,
+    'topics_votes_down' => 0,
+    'topics_stars' => 0,
+    'comments_votes_up' => 0,
+    'comments_votes_down' => 0,
+    'comments_stars' => 0,
   ),
   'fieldMeta' => 
   array (
     'id' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
       'attributes' => 'unsigned',
       'null' => false,
       'index' => 'pk',
-    ),
-    'rating' => 
-    array (
-      'dbtype' => 'decimal',
-      'precision' => '12,2',
-      'phptype' => 'float',
-      'null' => true,
     ),
     'createdon' => 
     array (
@@ -58,7 +54,7 @@ $xpdo_meta_map['comAuthor']= array (
     ),
     'topics' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
       'attributes' => 'unsigned',
@@ -66,22 +62,20 @@ $xpdo_meta_map['comAuthor']= array (
     ),
     'comments' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
       'attributes' => 'unsigned',
       'null' => true,
     ),
-    'views' => 
+    'rating' => 
     array (
-      'dbtype' => 'int',
-      'precision' => '10',
-      'phptype' => 'integer',
-      'attributes' => 'unsigned',
+      'dbtype' => 'decimal',
+      'precision' => '12,2',
+      'phptype' => 'float',
       'null' => true,
-      'default' => 0,
     ),
-    'votes_topics' => 
+    'rating_topics_create' => 
     array (
       'dbtype' => 'decimal',
       'precision' => '12,2',
@@ -89,7 +83,7 @@ $xpdo_meta_map['comAuthor']= array (
       'null' => true,
       'default' => 0.0,
     ),
-    'votes_comments' => 
+    'rating_topics_votes' => 
     array (
       'dbtype' => 'decimal',
       'precision' => '12,2',
@@ -97,57 +91,85 @@ $xpdo_meta_map['comAuthor']= array (
       'null' => true,
       'default' => 0.0,
     ),
-    'stars_topics' => 
+    'rating_topics_stars' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
       'attributes' => 'unsigned',
       'null' => true,
       'default' => 0,
     ),
-    'stars_comments' => 
+    'rating_comments_create' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'decimal',
+      'precision' => '12,2',
+      'phptype' => 'float',
+      'null' => true,
+      'default' => 0.0,
+    ),
+    'rating_comments_votes' => 
+    array (
+      'dbtype' => 'decimal',
+      'precision' => '12,2',
+      'phptype' => 'float',
+      'null' => true,
+      'default' => 0.0,
+    ),
+    'rating_comments_stars' => 
+    array (
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
       'attributes' => 'unsigned',
       'null' => true,
       'default' => 0,
     ),
-    'votes_topics_up' => 
+    'topics_votes_up' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
-      'attributes' => 'unsigned',
       'null' => true,
       'default' => 0,
     ),
-    'votes_topics_down' => 
+    'topics_votes_down' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
-      'attributes' => 'unsigned',
       'null' => true,
       'default' => 0,
     ),
-    'votes_comments_up' => 
+    'topics_stars' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
-      'attributes' => 'unsigned',
       'null' => true,
       'default' => 0,
     ),
-    'votes_comments_down' => 
+    'comments_votes_up' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
       'precision' => '10',
       'phptype' => 'integer',
-      'attributes' => 'unsigned',
+      'null' => true,
+      'default' => 0,
+    ),
+    'comments_votes_down' => 
+    array (
+      'dbtype' => 'integer',
+      'precision' => '10',
+      'phptype' => 'integer',
+      'null' => true,
+      'default' => 0,
+    ),
+    'comments_stars' => 
+    array (
+      'dbtype' => 'integer',
+      'precision' => '10',
+      'phptype' => 'integer',
       'null' => true,
       'default' => 0,
     ),
@@ -243,38 +265,6 @@ $xpdo_meta_map['comAuthor']= array (
       'columns' => 
       array (
         'comments' => 
-        array (
-          'length' => '',
-          'collation' => 'A',
-          'null' => false,
-        ),
-      ),
-    ),
-    'views' => 
-    array (
-      'alias' => 'views',
-      'primary' => false,
-      'unique' => false,
-      'type' => 'BTREE',
-      'columns' => 
-      array (
-        'views' => 
-        array (
-          'length' => '',
-          'collation' => 'A',
-          'null' => false,
-        ),
-      ),
-    ),
-    'votes' => 
-    array (
-      'alias' => 'stars_comments',
-      'primary' => false,
-      'unique' => false,
-      'type' => 'BTREE',
-      'columns' => 
-      array (
-        'stars_comments' => 
         array (
           'length' => '',
           'collation' => 'A',

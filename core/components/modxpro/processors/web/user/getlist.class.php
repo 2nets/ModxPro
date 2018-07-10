@@ -102,7 +102,7 @@ class UserGetListProcessor extends AppGetListProcessor
             ? strtolower($array['username'])
             : (int)$array['id'];
 
-        unset($array['id'], $array['usename'], $array['username'], $array['photo'], $array['email']);
+        unset($array['usename'], $array['username'], $array['photo'], $array['email']);
 
         return $array;
     }

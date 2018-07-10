@@ -10,6 +10,3 @@ require $path . '/index.php';
 $modx->getService('error', 'error.modError');
 $modx->setLogLevel(modX::LOG_LEVEL_INFO);
 $modx->setLogTarget('ECHO');
-
-/** @var PDO $pdo */
-$pdo = new PDO('mysql:dbname=mydb;host=127.0.0.1;charset=utf8', 'mydb', 'mypassword');

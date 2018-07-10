@@ -11,7 +11,6 @@ requirejs.config({
         backbone_epoxy: 'lib/backbone.epoxy.min',
         underscore: 'lib/underscore.min',
         alertify: 'lib/alertify.min',
-        fontawesome: 'lib/fontawesome.min',
         cookies: 'lib/js.cookie.min',
         prism: 'lib/prism.min',
         markitup: 'lib/markitup.min',
@@ -19,7 +18,8 @@ requirejs.config({
         jquery_form: 'lib/jquery.form.min',
         moment: 'lib/moment-with-locales.min',
         numeral: 'lib/numeral.min',
-        pdopage: 'lib/pdopage.min',
+        sisyphus: 'lib/sisyphus.min',
+        // pdopage: 'lib/pdopage.min',
     },
     shim: {
         bootstrap: {
@@ -50,7 +50,7 @@ requirejs.config({
             exports: 'pdoPage'
         },
         app: {
-            deps: ['jquery', 'backbone', 'alertify', 'cookies', 'moment', 'numeral', 'bootstrap', 'fontawesome', 'backbone_epoxy', 'backbone_syphon'],
+            deps: ['jquery', 'backbone', 'alertify', 'cookies', 'moment', 'numeral', 'bootstrap', 'backbone_epoxy', 'backbone_syphon'],
             exports: 'App'
         },
     }
@@ -71,9 +71,6 @@ requirejs.onError = function (err) {
     }
 };
 
-FontAwesomeConfig = {
-    searchPseudoElements: true,
-};
 // Disable javascript links before initialize
 AppInitialized = false;
 var i;

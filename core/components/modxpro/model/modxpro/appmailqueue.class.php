@@ -18,7 +18,7 @@ class appMailQueue extends xPDOSimpleObject
         $sender = $this->xpdo->getOption('emailsender');
         $site = $this->xpdo->getOption('site_name');
         /** @var appMail $mail */
-        $mail = $this->xpdo->getService('mail', 'AppMail', MODX_CORE_PATH . 'components/extras/model/');
+        $mail = $this->xpdo->getService('mail', 'AppMail', MODX_CORE_PATH . 'components/modxpro/model/');
         $mail->setHTML(true);
         $mail->set(modMail::MAIL_SUBJECT, $this->subject);
         $mail->set(modMail::MAIL_BODY, $this->body);
@@ -31,7 +31,7 @@ class appMailQueue extends xPDOSimpleObject
         $mail->reset();
         if (!$send) {
             $this->xpdo->log(xPDO::LOG_LEVEL_ERROR, 'Could not send email: ' . $mail->mailer->ErrorInfo);
-            $this->xpdo->log(xPDO::LOG_LEVEL_ERROR, print_r($this->toArray(), 1));
+            $this->xpdo->log(xPDO::LOG_LEVEL_ERROR, print_r($this->toArray(), true));
 
             return false;
         }

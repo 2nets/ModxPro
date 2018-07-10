@@ -20,13 +20,13 @@ class CommentGetLatestProcessor extends AppGetListProcessor
      */
     public function prepareQueryBeforeCount(xPDOQuery $c)
     {
-        $last = $this->App->pdoTools->getCollection('comThread', [
+        $last = $this->App->pdoTools->getCollection('comTopic', [
             'context' => $this->modx->context->key,
         ], [
             'select' => [
-                'comThread' => 'comment_last',
+                'comTopic' => 'last_comment',
             ],
-            'sortby' => 'comment_time',
+            'sortby' => 'last_comment',
             'sortdir' => 'desc',
             'limit' => $this->getProperty('limit'),
             'setTotal' => false,
@@ -37,7 +37,7 @@ class CommentGetLatestProcessor extends AppGetListProcessor
             'id:IN' => [],
         ];
         foreach ($last as $v) {
-            $where['id:IN'][] = $v['comment_last'];
+            $where['id:IN'][] = $v['last_comment'];
         }
         $c->where($where);
 
@@ -52,16 +52,14 @@ class CommentGetLatestProcessor extends AppGetListProcessor
      */
     public function prepareQueryAfterCount(xPDOQuery $c)
     {
-        $c->leftJoin('comThread', 'Thread');
-        $c->leftJoin('comTopic', 'Topic', 'Thread.topic = Topic.id');
+        $c->leftJoin('comTopic', 'Topic');
         $c->leftJoin('modUser', 'User');
         $c->leftJoin('modUserProfile', 'UserProfile');
 
-        $c->select('comComment.id, comComment.text, comComment.createdon, comComment.createdby');
-        $c->select('Thread.topic, Thread.comments');
+        $c->select('comComment.id, comComment.content, comComment.createdon, comComment.createdby');
         $c->select('User.username');
         $c->select('UserProfile.fullname, UserProfile.photo, UserProfile.email, UserProfile.usename');
-        $c->select('Topic.pagetitle as pagetitle, Topic.uri as uri');
+        $c->select('Topic.pagetitle as pagetitle, Topic.uri as uri, Topic.comments');
 
         return $c;
     }

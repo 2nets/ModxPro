@@ -1,11 +1,24 @@
-<h3>{$.en ? 'Comments' : 'Комментарии'}: {$total}</h3>
+<div class="d-flex flex-wrap justify-content-between align-items-center">
+    <h3>{$.en ? 'Comments' : 'Комментарии'}: <span id="comments-count">{$results.topic.comments ?: 0}</span></h3>
+    {if $_modx->isAuthenticated()}
+        <div class="subscription custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="subscription"
+                   data-type="topic" data-id="{$results.topic.id}"
+                   {if ($results.topic.id | subscribed : 'comTopic')}checked{/if}>
+            <label class="custom-control-label" for="subscription">
+                {$.en ? 'Notice about new comments' : 'Уведомлять о новых комментариях'}
+            </label>
+        </div>
+    {/if}
+</div>
 
-<div class="comments-list thread">
+<div id="comments" class="comments-list thread">
     {foreach $results.comments as $item}
         {var $level = 0}
-        {include 'file:chunks/comments/comments-thread.tpl' item=$item level=$level seen=$results.seen thread=$results.thread}
+        {include 'file:chunks/comments/_comment.tpl' item=$item level=$level seen=$results.seen topic=$results.topic}
     {/foreach}
 </div>
 
-<br><br>
-<h5>{$.en ? 'Comments form' : 'Форма добавления коммента'}</h5>
+{if $_modx->isAuthenticated()}
+    {include 'file:chunks/comments/_form.tpl' topic=$results.topic new=$results.new}
+{/if}

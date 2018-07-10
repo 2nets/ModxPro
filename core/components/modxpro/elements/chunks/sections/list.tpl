@@ -1,9 +1,20 @@
 {foreach $results as $item}
     <div class="topic-row">
-        <h2 class="topic-title">
-            <a href="/{$item.uri}">{$item.pagetitle}</a>
-        </h2>
-
+        <div class="d-flex flex-wrap justify-content-between align-items-center">
+            <h2 class="topic-title">
+                <a href="/{$item.uri}">{$item.pagetitle}</a>
+            </h2>
+            {if $_modx->isAuthenticated()}
+                <div class="subscription custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input subscription" id="subscription-{$item.id}"
+                           data-type="section" data-id="{$item.id}"
+                           {if ($item.id | subscribed)}checked{/if}>
+                    <label class="custom-control-label" for="subscription-{$item.id}">
+                        {$.en ? 'Notice about new topics' : 'Уведомлять о новых заметках'}
+                    </label>
+                </div>
+            {/if}
+        </div>
         <div class="topic-content">
             {$item.description}
             <ul class="last-topics">

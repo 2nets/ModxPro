@@ -52,39 +52,38 @@
     &:hover {
       opacity: .7;
     }
-    &:after {
+    &::after {
       font-family: 'Font Awesome 5 Brands';
-      display: none;
       color: #fff;
     }
     &.facebook {
       background: #305093;
-      &:after {
+      &::after {
         content: '\f09a';
       }
     }
     &.google {
       background: #cd4f30;
-      &:after {
+      &::after {
         content: '\f0d5';
       }
     }
     &.twitter {
       background: #00a7ec;
-      &:after {
+      &::after {
         content: '\f099';
       }
     }
     &.vkontakte {
       background: #3f6895;
-      &:after {
+      &::after {
         content: '\f189';
       }
     }
     &.yandex {
       background: #ffdb4d;
-      color: red;
-      &:after {
+      &::after {
+        color: red;
         content: '\f413';
       }
     }

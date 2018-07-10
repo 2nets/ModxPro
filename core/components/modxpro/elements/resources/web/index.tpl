@@ -1,13 +1,19 @@
 {if empty($mode)}
-    {var $res = 'community/topic/getlist' | processor : [
+    {var $data = [
         'limit' => 10,
         'showSection' => true,
+        'sort' => 'comTopic.important desc, comTopic.publishedon',
         'where' => [
+            'comTopic.publishedon:>' => (time() - 30*86400) | date : 'Y-m-d H:i:s'
             'Section.alias:NOT IN' => ['help', 'work'],
-            'comTopic.important:>=' => 0,
-            'comTopic.rating:>' => -3,
+            ['comTopic.important:>=' => 0, 'OR:comTopic.rating:>' => -3]
         ],
     ]}
+    {var $res = 'community/topic/getlist' | processor : $data}
+    {if !$res.total}
+        {var $data['where']['comTopic.publishedon:>'] = (time() - 365*86400) | date : 'Y-m-d H:i:s'}
+        {var $res = 'community/topic/getlist' | processor : $data}
+    {/if}
 {/if}
 
 {include 'file:chunks/_banner.tpl'}
@@ -28,7 +34,7 @@
     </li>
 </ul>
 <div class="topics-list">
-    {$res.results}
+    {$res.results ?: '<div class="alert alert-info">'~($.en ? 'There`s nothing here' : 'Здесь ничего нет') ~'</div>'}
     {include 'file:chunks/promo/page.tpl'}
     {include 'file:chunks/_pagination.tpl' res=$res}
 </div>

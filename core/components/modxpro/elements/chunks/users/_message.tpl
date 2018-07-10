@@ -33,7 +33,7 @@
                     {/if}
                 </div>
 
-                <div class="buttons justify-content-between">
+                <div class="buttons §">
                     <button type="submit" class="btn btn-success">{$.en ? 'Submit' : 'Отправить'}</button>
                     <button class="btn btn-secondary" data-dismiss="modal">{$.en ? 'Cancel' : 'Отмена'}</button>
                 </div>

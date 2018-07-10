@@ -1,4 +1,3 @@
 .idea
 core/components/modxpro/vendor
 core/components/modxpro/composer.lock
-core/components/modxpro/cli/_initialize.php

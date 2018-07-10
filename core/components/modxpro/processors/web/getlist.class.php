@@ -50,6 +50,10 @@ class AppGetListProcessor extends modObjectGetListProcessor
             'query' => '',
         ]);
 
+        if ($tpl = $this->getProperty('tpl')) {
+            $this->tpl = $tpl;
+        }
+
         return true;
     }
 
@@ -91,7 +95,8 @@ class AppGetListProcessor extends modObjectGetListProcessor
      *
      * @return array|bool
      */
-    public function checkResults($data = []) {
+    public function checkResults($data = [])
+    {
         $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
         if (!$isAjax && !$data['results']) {
             if (!empty($_GET['page'])) {
@@ -221,7 +226,7 @@ class AppGetListProcessor extends modObjectGetListProcessor
         }
 
         $output = [
-            'success' => !empty($array),
+            'success' => true,
             'start' => $this->getProperty('start'),
             'limit' => $this->getProperty('limit'),
             'total' => $count,

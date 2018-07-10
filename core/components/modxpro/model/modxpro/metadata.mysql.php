@@ -5,8 +5,7 @@ $xpdo_meta_map = array (
   array (
     0 => 'appMailQueue',
     1 => 'comTopic',
-    2 => 'comThread',
-    3 => 'comComment',
+    2 => 'comComment',
   ),
   'xPDOObject' => 
   array (
@@ -18,6 +17,7 @@ $xpdo_meta_map = array (
     5 => 'comVote',
     6 => 'comStar',
     7 => 'comView',
+    8 => 'comSubscriber',
   ),
   'modResource' => 
   array (

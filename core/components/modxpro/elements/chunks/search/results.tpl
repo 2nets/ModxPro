@@ -14,7 +14,7 @@
             <div class="mr-3">
                 <a href="/{$item.section_uri}"><i class="far fa-folder-open"></i> {$item.section_title}</a>
             </div>
-            <div title="{$.en ? 'Search weight' : 'Поисковый вес'}"><i class="far fa-weight"></i> {number_format($item.weight, 0, '.', ' ')}</div>
+            <div title="{$.en ? 'Search weight' : 'Поисковый вес'}"><i class="far fa-weight"></i> {$item.weight | number}</div>
         </div>
     </div>
 {/foreach}
